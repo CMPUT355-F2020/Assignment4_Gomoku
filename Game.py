@@ -5,7 +5,7 @@ from pathlib import Path
 import os, sys
 
 def draw_board(screen):
-    screen.fill((255, 255, 255))
+    screen.fill((132, 132, 130))
     pygame.draw.rect(screen, (0,0,0), (30,30,540,540), 1)
     pygame.draw.rect(screen, (193,154,107), (31,31,538,538))
     for pos in range(1,18):
@@ -22,13 +22,17 @@ def load_dict():
     return gdict
 
 def load_clr():
-    if not os.path.exists("assets/clr.pkl"):
-        clr = (0, 0, 0)
+    if not os.path.exists("assets/clr.txt"):
+        return (0, 0, 0)
     else:
-        with open("assets/clr.pkl", 'rb') as handle:
-            clr = pickle.load(handle)
-    return clr
-
+        with open("assets/clr.txt", 'r') as handle:
+            clr = handle.read()      
+        if clr == 'WHITE':
+            return (255, 255, 255)
+        else:
+            return (0, 0, 0)
+    
+        
 def init_dict():
     gdict = {}
     horc = 0
@@ -40,12 +44,12 @@ def init_dict():
         horc += 1
     return gdict
 
-def draw_piece(screen, color, pos):
-    pygame.draw.circle(screen, (0,0,0), pos, 10)
+def draw_piece(screen, clr, pos):
+    pygame.draw.circle(screen, clr, pos, 10)
 
-def play(gdict, pos, color):
-    (gdict[pos])[2] = color
-    draw_piece(screen, (0,0,0), ((gdict[pos])[0], (gdict[pos])[1]))
+def play(gdict, pos, clr):
+    (gdict[pos])[2] = clr
+    draw_piece(screen, clr, ((gdict[pos])[0], (gdict[pos])[1]))
 
 def check_legal(gdict, pos):
     if gdict[pos] == -1:
@@ -54,16 +58,16 @@ def check_legal(gdict, pos):
         return 1
 
 def invert_clr(clr):
-    if clr == (0, 0, 0):
-        return (255, 255, 255)
+    if clr == 'WHITE':
+        return 'BLACK'
     else:
-        return (0, 0, 0)
+        return 'WHITE'
 
 def save_data(gdict, clr):
     with open("assets/data.pkl", 'wb') as handle:
             pickle.dump(gdict, handle, pickle.HIGHEST_PROTOCOL)
-    with open("assets/clr.pkl", 'wb') as handle:
-            pickle.dump(clr, handle, pickle.HIGHEST_PROTOCOL)
+    with open("assets/clr.txt", 'w') as handle:
+            handle.write(clr)
 
 def update_board_dict(screen, gdict):
     for key in gdict.keys():
@@ -75,8 +79,8 @@ def end_game():
         os.remove("assets/data.pkl")
     else:
         print("Error: Start game first")
-    if os.path.exists("assets/data.pkl"):
-        os.remove("assets/clr.pkl")
+    if os.path.exists("assets/clr.txt"):
+        os.remove("assets/clr.txt")
     sys.exit(0)
 
 if __name__ == "__main__":
@@ -106,7 +110,7 @@ if __name__ == "__main__":
                 print("Error: Position occupied")
             only_itr = 0
             if clr == (0, 0, 0):         
-                save_data(gdict, (255, 255, 255))
+                save_data(gdict, invert_clr('BLACK'))
             else:
-                save_data(gdict, (0, 0, 0))
+                save_data(gdict, invert_clr('WHITE'))
             pygame.display.update()
