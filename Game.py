@@ -32,11 +32,51 @@ def load_clr():
         else:
             return (0, 0, 0)
     
-        
+def game_over(gdict, pos, clr):
+    pass
+   # col = pos[0]
+   # row = int(pos[0:])
+   # #done = 0
+   # # column
+   # lst1 = list(range(row - 4, row +5))
+   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
+   # stack = []
+   # for index in len(lst2):
+   #     if len(stack) == 5:
+   #         return 1
+   #     elif (gdict[col+str(lst[index])])[2] == clr:
+   #         stack.append(col+element)
+   #     else:
+   #         stack.clear()
+   #         if (len(lst2) - index) < 5:   
+   #             break
+   # #row
+   # lst0 []
+   # lst1 =  col = pos[0]
+   # row = int(pos[0:])
+   # #done = 0
+   # # column
+   # lst1 = list(range(row - 4, row +5))
+   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
+   # stack = []
+   # for index in len(lst2):
+   #     if len(stack) == 5:
+   #         return 1
+   #     elif (gdict[col+str(lst[index])])[2] == clr:
+   #         stack.append(col+element)
+   #     else:
+   #         stack.clear()
+   #         if (len(lst2) - index) < 5:   
+   #             break
+   # #row
+   # lst0 []
+   # lst1 = 
+
+
 def init_dict():
     gdict = {}
     horc = 0
-    for letter in ascii_lowercase[:19]:
+    for letter in ascii_lowercase[:8] + ascii_lowercase[9:20]:
         verc = 0
         for number in range(19, 0, -1):
             gdict[letter + str(number)] = [30*(horc+1), 30*(verc+1), -1]
@@ -71,6 +111,7 @@ def save_data(gdict, clr):
 
 def update_board_dict(screen, gdict):
     for key in gdict.keys():
+        print(key)
         if (gdict[key])[2] != -1:
             draw_piece(screen, (gdict[key])[2], ((gdict[key])[0], (gdict[key])[1]))
 
