@@ -183,7 +183,7 @@ if __name__ == "__main__":
             else:    
                 print("Error: Position occupied")
                 continue
-            if game_over(gdict, pos, clr) == 1:
+            if game_over(gdict, pos, clr)1:
                 print('Gameover')
                 end_game()
             only_itr = 0
