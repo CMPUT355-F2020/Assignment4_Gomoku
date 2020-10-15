@@ -37,41 +37,35 @@ def game_over(gdict, pos, clr):
     row = int(pos[1:])
     #done = 0
     # column
-    lst = list(range(row - 4, row +5))
+    lst = list(range(row - 4, row + 5))
     #lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
     stack = []
     for index in range(len(lst)):
-        if lst[index] <= 0 or lst[index] >= 20:
-            continue
-        elif len(stack) == 5:
+        if len(stack) == 5:
             return 1
+        elif lst[index] <= 0 or lst[index] >= 20:
+            continue
         elif (gdict[col+str(lst[index])])[2] == clr:
             stack.append(col+str(lst[index]))
         else:
             stack.clear()
             if (len(lst) - index) < 5:   
                 break
-    return 0
     #row
-    #col = pos[0]
-    #row = int(pos[0:])
-    #done = 0
-    # column
-   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
-   # stack = []
-   # for index in len(lst2):
-   #     if len(stack) == 5:
-   #         return 1
-   #     elif (gdict[col+str(lst[index])])[2] == clr:
-   #         stack.append(col+element)
-   #     else:
-   #         stack.clear()
-   #         if (len(lst2) - index) < 5:   
-   #             break
-   # #row
-   # lst0 []
-   # lst1 = 
-
+    lst = [chr(ch) for ch in range(ord(col) - 4, ord(col) + 5)]
+    stack = []
+    for index in range(len(lst)):
+        if len(stack) == 5:
+            return 1
+        elif lst[index] not in [ch for ch in ascii_lowercase[:8] + ascii_lowercase[9:20]]:
+            continue
+        elif (gdict[lst[index]+str(row)])[2] == clr:
+            stack.append(lst[index]+str(row))
+        else:
+            stack.clear()
+            if (len(lst) - index) < 5:   
+                break    
+    return 0
 
 def init_dict():
     gdict = {}
