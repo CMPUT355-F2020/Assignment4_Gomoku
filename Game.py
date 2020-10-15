@@ -32,47 +32,6 @@ def load_clr():
         else:
             return (0, 0, 0)
     
-def game_over(gdict, pos, clr):
-    pass
-   # col = pos[0]
-   # row = int(pos[0:])
-   # #done = 0
-   # # column
-   # lst1 = list(range(row - 4, row +5))
-   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
-   # stack = []
-   # for index in len(lst2):
-   #     if len(stack) == 5:
-   #         return 1
-   #     elif (gdict[col+str(lst[index])])[2] == clr:
-   #         stack.append(col+element)
-   #     else:
-   #         stack.clear()
-   #         if (len(lst2) - index) < 5:   
-   #             break
-   # #row
-   # lst0 []
-   # lst1 =  col = pos[0]
-   # row = int(pos[0:])
-   # #done = 0
-   # # column
-   # lst1 = list(range(row - 4, row +5))
-   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
-   # stack = []
-   # for index in len(lst2):
-   #     if len(stack) == 5:
-   #         return 1
-   #     elif (gdict[col+str(lst[index])])[2] == clr:
-   #         stack.append(col+element)
-   #     else:
-   #         stack.clear()
-   #         if (len(lst2) - index) < 5:   
-   #             break
-   # #row
-   # lst0 []
-   # lst1 = 
-
-
 def init_dict():
     gdict = {}
     horc = 0
