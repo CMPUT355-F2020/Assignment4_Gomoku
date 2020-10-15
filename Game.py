@@ -35,8 +35,10 @@ def load_clr():
 def game_over(gdict, pos, clr):
     col = pos[0]
     row = int(pos[1:])
+    #done = 0
     # column
     lst = list(range(row - 4, row + 5))
+    #lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
     stack = []
     for index in range(len(lst)):
         if len(stack) == 5:
@@ -63,12 +65,32 @@ def game_over(gdict, pos, clr):
             stack.clear()
             if (len(lst) - index) < 5:   
                 break
-    #right_diagonal
+    #left_diaginal
     stack = []
     lst = []
     step = [ord(col) - 5, row - 5]
     for i in range(-4, 5):
         step = [step[0] + 1,step[1] + 1]
+        if step[0] == ord("i"):
+            step[0] += 1
+        lst.append(step)
+    for index in range(len(lst)):
+        if len(stack) == 5:
+            return 1
+        elif lst[index][1] <= 0 or lst[index][1] >= 20 or chr(lst[index][0]) not in [ch for ch in ascii_lowercase[:8] + ascii_lowercase[9:20]]:
+            continue
+        elif (gdict[chr(lst[index][0])+str(lst[index][1])])[2] == clr:
+            stack.append(chr(lst[index][0])+str(lst[index][1]))
+        else:
+            stack.clear()
+            if (len(lst) - index) < 5:   
+                break
+    #right_diagonal
+    stack = []
+    lst = []
+    step = [ord(col) - 5, row + 5]
+    for i in range(-4, 5):
+        step = [step[0] + 1,step[1] - 1]
         if step[0] == ord("i"):
             step[0] += 1
         lst.append(step)
@@ -123,7 +145,6 @@ def save_data(gdict, clr):
 
 def update_board_dict(screen, gdict):
     for key in gdict.keys():
-        print(key)
         if (gdict[key])[2] != -1:
             draw_piece(screen, (gdict[key])[2], ((gdict[key])[0], (gdict[key])[1]))
 
@@ -162,7 +183,7 @@ if __name__ == "__main__":
             else:    
                 print("Error: Position occupied")
                 continue
-            if game_over(gdict, pos, clr):
+            if game_over(gdict, pos, clr) == 1:
                 print('Gameover')
                 end_game()
             only_itr = 0
