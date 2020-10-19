@@ -137,6 +137,13 @@ def invert_clr(clr):
     else:
         return 'WHITE'
 
+def get_clr(clr):
+    if clr == (0, 0, 0):
+        return 'BLACK'
+    else:
+        return 'WHITE'
+
+
 def save_data(gdict, clr):
     with open("assets/data.pkl", 'wb') as handle:
             pickle.dump(gdict, handle, pickle.HIGHEST_PROTOCOL)
@@ -175,7 +182,7 @@ if __name__ == "__main__":
             clr = load_clr()
             update_board_dict(screen, gdict)
             pygame.display.update()
-            pos = input("Enter the position you want to play: ")
+            pos = input(get_clr(clr)+"'s Move\nEnter the position you want to play: ")
             if pos == "quit":
                 end_game()
             if check_legal(gdict, pos):
@@ -184,7 +191,7 @@ if __name__ == "__main__":
                 print("Error: Position occupied")
                 continue
             if game_over(gdict, pos, clr):
-                print('Gameover')
+                print('Gameover\n'+get_clr(clr)+' won!')
                 end_game()
             only_itr = 0
             if clr == (0, 0, 0):         
