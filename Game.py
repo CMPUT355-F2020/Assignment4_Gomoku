@@ -122,11 +122,11 @@ def draw_piece(screen, clr, pos):
     pygame.draw.circle(screen, clr, pos, 10)
 
 def play(gdict, pos, clr):
-    (gdict[pos])[2] = clr
+    gdict[pos][2] = clr
     draw_piece(screen, clr, ((gdict[pos])[0], (gdict[pos])[1]))
 
 def check_legal(gdict, pos):
-    if gdict[pos] == -1:
+    if gdict[pos][2] != -1:
         return 0
     else:
         return 1
