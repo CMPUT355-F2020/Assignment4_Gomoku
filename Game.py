@@ -33,45 +33,79 @@ def load_clr():
             return (0, 0, 0)
     
 def game_over(gdict, pos, clr):
-    pass
-   # col = pos[0]
-   # row = int(pos[0:])
-   # #done = 0
-   # # column
-   # lst1 = list(range(row - 4, row +5))
-   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
-   # stack = []
-   # for index in len(lst2):
-   #     if len(stack) == 5:
-   #         return 1
-   #     elif (gdict[col+str(lst[index])])[2] == clr:
-   #         stack.append(col+element)
-   #     else:
-   #         stack.clear()
-   #         if (len(lst2) - index) < 5:   
-   #             break
-   # #row
-   # lst0 []
-   # lst1 =  col = pos[0]
-   # row = int(pos[0:])
-   # #done = 0
-   # # column
-   # lst1 = list(range(row - 4, row +5))
-   # lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
-   # stack = []
-   # for index in len(lst2):
-   #     if len(stack) == 5:
-   #         return 1
-   #     elif (gdict[col+str(lst[index])])[2] == clr:
-   #         stack.append(col+element)
-   #     else:
-   #         stack.clear()
-   #         if (len(lst2) - index) < 5:   
-   #             break
-   # #row
-   # lst0 []
-   # lst1 = 
-
+    col = pos[0]
+    row = int(pos[1:])
+    #done = 0
+    # column
+    lst = list(range(row - 4, row + 5))
+    #lst2 = list(set([(i>0 and i<20)*i for i in lst1]))
+    stack = []
+    for index in range(len(lst)):
+        if len(stack) == 5:
+            return 1
+        elif lst[index] <= 0 or lst[index] >= 20:
+            continue
+        elif (gdict[col+str(lst[index])])[2] == clr:
+            stack.append(col+str(lst[index]))
+        else:
+            stack.clear()
+            if (len(lst) - index) < 5:   
+                break
+    #row
+    lst = [chr(ch) for ch in range(ord(col) - 4, ord(col) + 5)]
+    stack = []
+    for index in range(len(lst)):
+        if len(stack) == 5:
+            return 1
+        elif lst[index] not in [ch for ch in ascii_lowercase[:8] + ascii_lowercase[9:20]]:
+            continue
+        elif (gdict[lst[index]+str(row)])[2] == clr:
+            stack.append(lst[index]+str(row))
+        else:
+            stack.clear()
+            if (len(lst) - index) < 5:   
+                break
+    #left_diaginal
+    stack = []
+    lst = []
+    step = [ord(col) - 5, row - 5]
+    for i in range(-4, 5):
+        step = [step[0] + 1,step[1] + 1]
+        if step[0] == ord("i"):
+            step[0] += 1
+        lst.append(step)
+    for index in range(len(lst)):
+        if len(stack) == 5:
+            return 1
+        elif lst[index][1] <= 0 or lst[index][1] >= 20 or chr(lst[index][0]) not in [ch for ch in ascii_lowercase[:8] + ascii_lowercase[9:20]]:
+            continue
+        elif (gdict[chr(lst[index][0])+str(lst[index][1])])[2] == clr:
+            stack.append(chr(lst[index][0])+str(lst[index][1]))
+        else:
+            stack.clear()
+            if (len(lst) - index) < 5:   
+                break
+    #right_diagonal
+    stack = []
+    lst = []
+    step = [ord(col) - 5, row + 5]
+    for i in range(-4, 5):
+        step = [step[0] + 1,step[1] - 1]
+        if step[0] == ord("i"):
+            step[0] += 1
+        lst.append(step)
+    for index in range(len(lst)):
+        if len(stack) == 5:
+            return 1
+        elif lst[index][1] <= 0 or lst[index][1] >= 20 or chr(lst[index][0]) not in [ch for ch in ascii_lowercase[:8] + ascii_lowercase[9:20]]:
+            continue
+        elif (gdict[chr(lst[index][0])+str(lst[index][1])])[2] == clr:
+            stack.append(chr(lst[index][0])+str(lst[index][1]))
+        else:
+            stack.clear()
+            if (len(lst) - index) < 5:   
+                break
+    return 0
 
 def init_dict():
     gdict = {}
@@ -88,11 +122,11 @@ def draw_piece(screen, clr, pos):
     pygame.draw.circle(screen, clr, pos, 10)
 
 def play(gdict, pos, clr):
-    (gdict[pos])[2] = clr
+    gdict[pos][2] = clr
     draw_piece(screen, clr, ((gdict[pos])[0], (gdict[pos])[1]))
 
 def check_legal(gdict, pos):
-    if gdict[pos] == -1:
+    if gdict[pos][2] != -1:
         return 0
     else:
         return 1
@@ -103,6 +137,13 @@ def invert_clr(clr):
     else:
         return 'WHITE'
 
+def get_clr(clr):
+    if clr == (0, 0, 0):
+        return 'BLACK'
+    else:
+        return 'WHITE'
+
+
 def save_data(gdict, clr):
     with open("assets/data.pkl", 'wb') as handle:
             pickle.dump(gdict, handle, pickle.HIGHEST_PROTOCOL)
@@ -111,7 +152,6 @@ def save_data(gdict, clr):
 
 def update_board_dict(screen, gdict):
     for key in gdict.keys():
-        print(key)
         if (gdict[key])[2] != -1:
             draw_piece(screen, (gdict[key])[2], ((gdict[key])[0], (gdict[key])[1]))
 
@@ -142,13 +182,17 @@ if __name__ == "__main__":
             clr = load_clr()
             update_board_dict(screen, gdict)
             pygame.display.update()
-            pos = input("Enter the position you want to play: ")
+            pos = input(get_clr(clr)+"'s Move\nEnter the position you want to play: ")
             if pos == "quit":
                 end_game()
             if check_legal(gdict, pos):
                 play(gdict, pos, clr)    
             else:    
                 print("Error: Position occupied")
+                continue
+            if game_over(gdict, pos, clr):
+                print('Gameover\n'+get_clr(clr)+' won!')
+                end_game()
             only_itr = 0
             if clr == (0, 0, 0):         
                 save_data(gdict, invert_clr('BLACK'))
