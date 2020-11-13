@@ -12,8 +12,8 @@ def create_board(row,col):
     return np.full((row, col), '.') 
 
 
-def display(board, labels):
-    print(pandas.DataFrame(board, columns=labels, index=labels))
+def display(board, x_labels, y_labels):
+    print(pandas.DataFrame(board, columns=x_labels, index=y_labels))
     
  
 def found_winner(gfg, board):
@@ -24,17 +24,18 @@ def found_winner(gfg, board):
 # TODO: add error handling
         # if they do not enter a valid row or column, ask again
         # if they choose an occupied cell, ask again         
-def alternate_moves(board, player):
+def alternate_moves(board, player, x_labels):
     
     if player == 1:
+        col_letter = input("Choose a column: ").lower()
+        col_number = x_labels.index(col_letter)
         row_move = int(input("Choose a row: "))
-        col_move = int(input("Choose a column: "))
-        board[row_move][col_move] = 'x'
+        board[row_move][col_number] = 'x'
         next_player = 2
         
     elif player == 2: 
         row_move, col_move = computer_player_random(board)
-        #row_move, col_move = computer_player(board)
+        #location = computer_player(board)
         board[row_move][col_move] = 'o'
         next_player = 1
     
@@ -106,22 +107,23 @@ def main():
     # initialize variables
     row = 15
     col = 15
-    labels = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14']
+    x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
+    y_labels = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14']
     gfg = GFG()
     
     # set up the starting conditions
     game_continue = True 
     player = 1
     current_board_state = create_board(row,col)
-    display(current_board_state, labels)
+    display(current_board_state, x_labels, y_labels)
     
     # play game 
     while game_continue:
         
         print ("Player " + str(player) +"'s turn")
         
-        current_board_state, player = alternate_moves(current_board_state, player)
-        display(current_board_state, labels)
+        current_board_state, player = alternate_moves(current_board_state, player, x_labels)
+        display(current_board_state, x_labels, y_labels)
         
         if found_winner(gfg, current_board_state):
             print("Game Over")
