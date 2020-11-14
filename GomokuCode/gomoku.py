@@ -26,7 +26,7 @@ def create_board(row,col):
 
 
 # INPUT:  2D board matrix and the x and y axis labels  
-# OUTPUT: prints boards
+# OUTPUT: prints board
 def display(board, x_labels, y_labels):
     print(pandas.DataFrame(board, columns=x_labels, index=y_labels))
     
@@ -40,23 +40,23 @@ def found_winner(gfg, board):
 
 
 # INPUT:  the x labels and the row size 
-# OUTPUT: the row and column for the human players next move 
+# OUTPUT: the row and column for the human players' next move 
 def get_user_next_move(board, x_labels, row_size):
-    
     valid = False 
     while not valid:
         col = input("Choose a column: ").lower()
         row = input("Choose a row: ")
-        if (col in x_labels) and (row.isdigit()) and (int(row) < row_size) and (int(row) >= 0) and (is_legal(board, [int(row), x_labels.index(col)])):
+        
+        if (col in x_labels) and (row.isdigit()) and (int(row) <= row_size) and (int(row) >= 1) and (is_legal(board, [int(row)-1, x_labels.index(col)])):
             valid = True
         else:
             print("You chose an invalid location, choose again.")
-        
-    return int(row), x_labels.index(col)
+    
+    return int(row)-1, x_labels.index(col)
 
 
-# INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object 
-# OUTPUT: the new state of the board and the next player 
+# INPUT:  2D board matrix, cell location 
+# OUTPUT: returns True if that cell is empty (i.e. a move can be made) 
 def is_legal(board, cell):
     if cell != None:
         return board[cell[0], cell[1]] == "."
@@ -76,7 +76,7 @@ def alternate_moves(board, player, x_labels, gfg):
     # computer is player 2 (o)
     elif player == 2: 
         move = computer_player_random(board, gfg) 
-        #location = computer_player(board, gfg)
+        #move = computer_player(board, gfg)
         board[move[0]][move[1]] = 'o'
         next_player = 1
     
@@ -88,9 +88,7 @@ def alternate_moves(board, player, x_labels, gfg):
 def computer_player_random(board, gfg):
     
     start_time = time.time()
-    
     print("Computer is thinking... ")
-    
     move = check_winning_move(board, gfg)
      
     if move == None: 
@@ -156,7 +154,7 @@ def get_chain_location(gfg, board, chains):
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next move
 def check_winning_move(board, gfg):
-    winning_moves = ['.oooo', 'o.ooo', 'oo.oo','.ooo..']
+    winning_moves = ['.oooo', 'o.ooo', 'oo.oo']
     return get_chain_location(gfg, board, winning_moves)
 
 
@@ -195,7 +193,7 @@ def main():
     row = 15
     col = 15
     x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
-    y_labels = ['0','1','2','3','4','5','6','7','8','9','10','11','12','13','14']
+    y_labels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', '15']
     gfg = GFG()
     
     # set up the starting conditions
