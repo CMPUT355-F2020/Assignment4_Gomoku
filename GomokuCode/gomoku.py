@@ -1,6 +1,15 @@
 # Gomoku Player 
 # CMPUT 355 Assignment 4 
 
+"""
+TO DO LIST:
+
+     1. finish and merge find_promising_cells() function into program
+     2. finish and merge assign_weights() function into program
+     3. test out player, optimize program if it's slow 
+     4. make prettier (merge the Game.py code that uses pygame)
+
+"""
 
 import numpy as np
 import pandas
@@ -30,15 +39,15 @@ def found_winner(gfg, board):
     return x_winner or o_winner
 
 
-# INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object 
-# OUTPUT: the new state of the board and the next player 
-def get_user_next_move(x_labels, row_size):
+# INPUT:  the x labels and the row size 
+# OUTPUT: the row and column for the human players next move 
+def get_user_next_move(board, x_labels, row_size):
     
     valid = False 
     while not valid:
         col = input("Choose a column: ").lower()
         row = input("Choose a row: ")
-        if (col in x_labels) and (row.isdigit()) and (int(row) < row_size) and (int(row) >= 0):
+        if (col in x_labels) and (row.isdigit()) and (int(row) < row_size) and (int(row) >= 0) and (is_legal(board, [int(row), x_labels.index(col)])):
             valid = True
         else:
             print("You chose an invalid location, choose again.")
@@ -48,11 +57,19 @@ def get_user_next_move(x_labels, row_size):
 
 # INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object 
 # OUTPUT: the new state of the board and the next player 
+def is_legal(board, cell):
+    if cell != None:
+        return board[cell[0], cell[1]] == "."
+    return False
+
+
+# INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object 
+# OUTPUT: the new state of the board and the next player 
 def alternate_moves(board, player, x_labels, gfg):
     
     # human is player 1 (x)
     if player == 1:
-        row, col = get_user_next_move(x_labels, len(board[0]))
+        row, col = get_user_next_move(board, x_labels, len(board[0]))
         board[row][col] = 'x'
         next_player = 2
         
@@ -80,11 +97,8 @@ def computer_player_random(board, gfg):
         move = get_defensive_move(board, gfg)
     
     if move == None:
-        done = False
-        while not done:
+        while not is_legal(board, move):
             move = random.randint(0, 14), random.randint(0, 14)
-            if board[move[0]][move[1]] == '.':
-                done = True
                     
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
     print("Computer took", str(time.time() - start_time), "to make a move")

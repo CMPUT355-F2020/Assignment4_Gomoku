@@ -1,7 +1,6 @@
 # This program searches for a given chain in a 2D grid 
 
-# We do not take credit for this code, but we have slightly changed it to fit our needs
-# This code is contributed by Yezheng Li 
+# We do not take credit for this code, but we have adapted it to fit our needs
 # Found this code on this website: https://www.geeksforgeeks.org/search-a-word-in-a-2d-grid-of-characters/
 
 class GFG: 
@@ -19,7 +18,6 @@ class GFG:
 		            [0, 1],    # left horizontally 
 		            [0, -1]]   # right horizontally 		
 		
-					
 	# This function searches in all 8-direction from point(row, col) in grid[][] 
 	def search2D(self, grid, row, col, word): 
 		
