@@ -66,8 +66,7 @@ class GFG:
 		# and search given word 
 		for row in range(self.R): 
 			for col in range(self.C): 
-				return self.search2D(grid, row, col, word)
-					
-
-	
+				if self.search2D(grid, row, col, word): 
+					print("pattern found at " + str(row) + ', ' + str(col)) 				
+					return True 
 
