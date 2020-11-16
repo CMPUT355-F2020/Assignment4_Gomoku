@@ -123,7 +123,7 @@ def computer_player(board, gfg):
         move = best_move(board, dict_promising_cells)
     
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
-    print("Computer took", str(time.time() - start_time), "to make a move")    
+    print("Computer took", str(time.time() - start_time), "seconds to make a move")    
     
     return move
 
@@ -145,7 +145,6 @@ def get_chain_location(gfg, board, chains):
         if found: 
             print("found chain: " + chain)  
             loc = get_empty_cell(board, chain_locations)
-            print("Best next move is at " + str(loc))
             break 
     if not found: loc = None  
     return loc 
@@ -192,7 +191,7 @@ def main():
     # initialize variables
     row = 15
     col = 15
-    x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm', 'n', 'o']
+    x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p']
     y_labels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', '15']
     gfg = GFG()
     
