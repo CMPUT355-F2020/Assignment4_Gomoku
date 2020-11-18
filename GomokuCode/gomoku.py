@@ -4,9 +4,9 @@
 """
 TO DO LIST:
 
-     1. implement function to calculate weights and fill the weight matrix
+     1. implement calculate_heuristics() function
      2. test out player, optimize program if it's slow 
-     3. make prettier (merge the Game.py code that uses pygame)
+     3. make prettier (merge Game.py code that uses pygame)
 
 """
 
