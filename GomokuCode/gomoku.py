@@ -4,10 +4,9 @@
 """
 TO DO LIST:
 
-     1. finish and merge find_promising_cells() function into program
-     2. finish and merge assign_weights() function into program
-     3. test out player, optimize program if it's slow 
-     4. make prettier (merge the Game.py code that uses pygame)
+     1. implement function to calculate weights and fill the weight matrix
+     2. test out player, optimize program if it's slow 
+     3. make prettier (merge the Game.py code that uses pygame)
 
 """
 
@@ -22,7 +21,8 @@ import time
 # OUTPUT: returns 2D board matrix
 def create_board(row,col): 
     board = np.full((row, col), '.')
-    return board 
+    weights = np.full((row, col), 0)
+    return board, weights
 
 
 # INPUT:  2D board matrix and the x and y axis labels  
@@ -65,7 +65,7 @@ def is_legal(board, cell):
 
 # INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object 
 # OUTPUT: the new state of the board and the next player 
-def alternate_moves(board, player, x_labels, gfg):
+def alternate_moves(board, player, x_labels, gfg, board_weights):
     
     # human is player 1 (x)
     if player == 1:
@@ -75,17 +75,17 @@ def alternate_moves(board, player, x_labels, gfg):
         
     # computer is player 2 (o)
     elif player == 2: 
-        move = computer_player_random(board, gfg) 
-        #move = computer_player(board, gfg)
+        move = computer_player_random(board, gfg, board_weights) 
+        #move = computer_player(board, gfg, board_weights)
         board[move[0]][move[1]] = 'o'
         next_player = 1
     
-    return board, next_player
+    return board, board_weights, next_player
 
 
 # INPUT:  2D board matrix and the pattern_finder object 
 # OUTPUT: returns the location of the next move 
-def computer_player_random(board, gfg):
+def computer_player_random(board, gfg, board_weights):
     
     start_time = time.time()
     print("Computer is thinking... ")
@@ -106,7 +106,7 @@ def computer_player_random(board, gfg):
 
 # INPUT:  2D board matrix and the pattern_finder object 
 # OUTPUT: returns the location of the next move 
-def computer_player(board, gfg):
+def computer_player(board, gfg, board_weights):
     
     start_time = time.time()
     print("Computer is thinking... ")
@@ -118,9 +118,8 @@ def computer_player(board, gfg):
             move = get_defensive_move(board, gfg)
     
     if move == None:
-        possible_moves_dict = find_promising_cells(board, distance_from_node)
-        possible_moves_dict = assign_weights(board, possible_moves_dict)
-        move = best_move(board, dict_promising_cells)
+        board_weights = assign_weights(board, board_weights)
+        move = max_move(board_weights)
     
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
     print("Computer took", str(time.time() - start_time), "seconds to make a move")    
@@ -162,28 +161,19 @@ def check_winning_move(board, gfg):
 def get_defensive_move(board, gfg):
     defensive_cells = ['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']
     return get_chain_location(gfg, board, defensive_cells)
-
-
-# INPUT:  2D board matrix (list)
-#         distance_from_node (integer) - how far out we want to look to make chain bigger
-# OUTPUT: returns dict_promising_cells (dictionary) - dict of {location:weight}
-#         initialize all weights to 0  
-def find_promising_cells(board, distance_from_node):
+    
+    
+# INPUT:  2D board matrix (matrix)
+#         board_weights (matrix) 
+# OUTPUT: board_weights (matrix) with the weights filled in
+def assign_weights(board, board_weights):
     pass
     
     
-# INPUT:  2D board matrix (list)
-#         dict_promising_cells (dictionary) - dict of {location:weight}
-# OUTPUT: dict_promising_cells (dictionary) with the weights filled in
-def assign_weights(board, dict_promising_cells):
-    pass
-    
-    
-# INPUT:  2D board matrix
-#         dict_promising_cells (dictionary) - dict of {location:weight}
+# INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move 
-def best_move(board, dict_promising_cells):
-    return max(dict_promising_cells, key=dict_promising_cells.get)
+def max_move(board_weights):
+    return np.unravel_index(board_weights.argmax(), board_weights.shape)
 
     
 def main():
@@ -198,13 +188,13 @@ def main():
     # set up the starting conditions
     game_continue = True 
     player = 1
-    current_board_state = create_board(row,col)
+    current_board_state, board_weights = create_board(row,col)
     display(current_board_state, x_labels, y_labels)
     
     # play game 
     while game_continue:
         print ("Player " + str(player) +"'s turn")
-        current_board_state, player = alternate_moves(current_board_state, player, x_labels, gfg)
+        current_board_state, board_weights, player = alternate_moves(current_board_state, player, x_labels, gfg, board_weights)
         display(current_board_state, x_labels, y_labels)
         if found_winner(gfg, current_board_state):
             print("Game Over")
