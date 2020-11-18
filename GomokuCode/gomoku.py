@@ -166,10 +166,41 @@ def get_defensive_move(board, gfg):
 # INPUT:  2D board matrix (matrix)
 #         board_weights (matrix) 
 # OUTPUT: board_weights (matrix) with the weights filled in
-def assign_weights(board, board_weights):
-    pass
+def assign_weights(board, board_weights): ## add most recent move as argument?
     
+    """
+    idea for optimization: only iterate through cells that are
+    within 5by5 cells of most recent move, since those are the 
+    only ones whose weights should theoretically be affected 
+    """
     
+    # iterate through board 
+    for row in board:
+        for col in board:
+            if is_legal(board, [row, col]):
+                
+                # calculate weight based on the heuristics chain length and open ends
+                chain_length, open_ends = calculate_heuristics(board, row, col) 
+                weight = 0.6*chain_length + 0.4*open_ends # can change formula, this is just an example
+            
+            # assign weight 
+            board_weights[row][col] = weight 
+            
+    return board_weights
+
+
+# INPUT:  2D board, and the x and y coordinates of a cell
+# OUTPUT: returns the number for longest chain that cell is 
+#         a part of and the number of open ends for that longest chain 
+def calculate_heuristics(board, x, y):
+    chain_length = 0
+    open_ends = 0
+    
+    # calculate heuristics by looking at 24 surrounding cells in all directions 
+    
+    return chain_length, open_ends
+
+
 # INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move 
 def max_move(board_weights):
