@@ -16,6 +16,7 @@ import pandas
 import random
 from pattern_finder import GFG
 import time
+import copy
 
 
 # INPUT:  row and column dimensions 
@@ -79,7 +80,6 @@ def alternate_moves(board, player, x_labels, gfg):
         #move = computer_player(board, gfg)
         board[move[0]][move[1]] = 'o'
         next_player = 1
-    
     return board, next_player
 
 
@@ -90,7 +90,7 @@ def computer_player_random(board, gfg):
     start_time = time.time()
     print("Computer is thinking... ")
     move = check_winning_move(board, gfg)
-     
+    
     if move == None: 
         move = get_defensive_move(board, gfg)
     
@@ -110,22 +110,36 @@ def computer_player(board, gfg):
     
     start_time = time.time()
     print("Computer is thinking... ")
-    distance_from_node = 5
-    
+    search_dept = 5
     move = check_winning_move(board, gfg)
     
     if move == None:
-            move = get_defensive_move(board, gfg)
+        move = get_defensive_move(board, gfg)
     
     if move == None:
-        possible_moves_dict = find_promising_cells(board, distance_from_node)
-        possible_moves_dict = assign_weights(board, possible_moves_dict)
-        move = best_move(board, dict_promising_cells)
-    
+        move = get_best_move(board)
+        
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
     print("Computer took", str(time.time() - start_time), "seconds to make a move")    
     
     return move
+
+def get_best_move(board):
+    move_dict = {}
+    r_no = 0
+    for row in board:
+        c_no = 0
+        for cell in row:
+            if cell == '.':
+                old = copy.deepcopy(board)
+                cell = 'o'
+                move_dict[(r_no, c_no)] = evaluate_position(board)
+            c_no += 1
+        r_no += 1
+        
+def evaluate_position(board):
+    pass
+    #w = np.ones()
 
 
 # INPUT:  2D board matrix, chain_locations
@@ -146,7 +160,8 @@ def get_chain_location(gfg, board, chains):
             print("found chain: " + chain)  
             loc = get_empty_cell(board, chain_locations)
             break 
-    if not found: loc = None  
+    if not found: 
+        loc = None  
     return loc 
 
 
@@ -186,8 +201,7 @@ def best_move(board, dict_promising_cells):
     return max(dict_promising_cells, key=dict_promising_cells.get)
 
     
-def main():
-     
+if __name__=='__main__':
     # initialize variables
     row = 15
     col = 15
@@ -208,6 +222,4 @@ def main():
         display(current_board_state, x_labels, y_labels)
         if found_winner(gfg, current_board_state):
             print("Game Over")
-            game_continue = False 
-            
-main()    
+            game_continue = False    
