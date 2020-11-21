@@ -52,7 +52,10 @@ class GFG:
 		return 2, 2, False
 		
 		
-	# Searches given word in a given matrix in all 8 directions	 
+	# Searches given word in a given matrix in all 8 directions	
+	
+	### Add a flag to know if it should return or check the entire board 
+	### Should return number of pattern matches found 0, 1 ... 
 	def patternSearch(self, grid, word): 
 		
 		# Rows and columns in given grid 

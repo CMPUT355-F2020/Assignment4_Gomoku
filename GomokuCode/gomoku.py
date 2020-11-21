@@ -11,6 +11,7 @@ TO DO LIST:
 """
 
 import numpy as np
+import copy 
 import pandas
 import random
 from pattern_finder import GFG
@@ -174,31 +175,44 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
     only ones whose weights should theoretically be affected 
     """
     
+    player = 'x' # TODO- pass player to this fxn 
+    
     # iterate through board 
     for row in board:
         for col in board:
             if is_legal(board, [row, col]):
                 
-                # calculate weight based on the heuristics chain length and open ends
-                chain_length, open_ends = calculate_heuristics(board, row, col) 
-                weight = 0.6*chain_length + 0.4*open_ends # can change formula, this is just an example
-            
-            # assign weight 
-            board_weights[row][col] = weight 
+                
+                temp_board = copy.deepcopy(board)
+                
+                features = np.empty(6)
+                W = np.ones(6)
+                
+                chain3_1open, chain3_2open = check_chain_length(3,  board, x, y, player)
+                chain2_1open, chain2_2open = check_chain_length(2,  board, x, y, player)
+                chain1_1open, chain1_2open = check_chain_length(1,  board, x, y, player)
+                
+                # TODO - add values to features 
+                
+                # should we do dot product?
+                board_weights[row][col] = np.dot(features, W)
             
     return board_weights
 
 
-# INPUT:  2D board, and the x and y coordinates of a cell
-# OUTPUT: returns the number for longest chain that cell is 
-#         a part of and the number of open ends for that longest chain 
-def calculate_heuristics(board, x, y):
-    chain_length = 0
-    open_ends = 0
-    
-    # calculate heuristics by looking at 24 surrounding cells in all directions 
-    
-    return chain_length, open_ends
+def check_chain_length(n,  board, x, y, player):
+    pass
+
+"""
+Board_subset = need to figure out how to do this
+match = “”                                  
+for _ in range(n):
+		match += player
+match _2end = “.”+match+”.”
+match_1end = “.”+match
+return pattern_finder(board_subset, match_1end), pattern_finder(board_subset, match_2end)
+
+"""
 
 
 # INPUT:  2D board weight matrix
