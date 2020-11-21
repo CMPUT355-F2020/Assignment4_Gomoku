@@ -4,9 +4,9 @@
 """
 TO DO LIST:
 
-     1. implement calculate_heuristics() function
-     2. test out player, optimize program if it's slow 
-     3. make prettier (merge Game.py code that uses pygame)
+    1. implement calculate_heuristics() function
+    2. test out player, optimize program if it's slow 
+    3. make prettier (merge Game.py code that uses pygame)
 
 """
 
@@ -91,7 +91,7 @@ def computer_player_random(board, gfg, board_weights):
     start_time = time.time()
     print("Computer is thinking... ")
     move = check_winning_move(board, gfg)
-     
+    
     if move == None: 
         move = get_defensive_move(board, gfg)
     
@@ -205,11 +205,11 @@ def check_chain_length(n,  board, x, y, player):
 
 """
 Board_subset = need to figure out how to do this
-match = “”                                  
+match = ï¿½ï¿½                                  
 for _ in range(n):
 		match += player
-match _2end = “.”+match+”.”
-match_1end = “.”+match
+match _2end = ï¿½.ï¿½+match+ï¿½.ï¿½
+match_1end = ï¿½.ï¿½+match
 return pattern_finder(board_subset, match_1end), pattern_finder(board_subset, match_2end)
 
 """
@@ -222,7 +222,7 @@ def max_move(board_weights):
 
     
 def main():
-     
+    
     # initialize variables
     row = 15
     col = 15
