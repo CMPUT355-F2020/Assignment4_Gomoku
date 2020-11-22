@@ -1,12 +1,6 @@
 # Gomoku Player
 # CMPUT 355 Assignment 4
-
-"""
-TO DO LIST:
-    1. implement weights 
-    2. test out player, optimize program if it's slow
-    3. make prettier (merge Game.py code that uses pygame)
-"""
+# Group Name: ???
 
 import numpy as np
 import copy
@@ -74,7 +68,6 @@ def alternate_moves(board, player, x_labels, gfg, board_weights):
 
     # computer is player 2 (o)
     elif player == 2:
-        print("Computer is thinking... ")
         move = computer_player(board, gfg, board_weights)
         board[move[0]][move[1]] = 'o'
         next_player = 1
@@ -93,13 +86,10 @@ def computer_player(board, gfg, board_weights):
     if move == None:
         move = get_defensive_move(board, gfg)
 
+    if move == None: # special cases 
+        move = get_chain_location(gfg, board, ['.x.xx.','.ooo..'])
+    
     if move == None:
-        
-        # comment out 2 lines when all is working 
-        #while not is_legal(board, move):
-        #    move = random.randint(0, 14), random.randint(0, 14)   
-        
-        # un-comment out 2 lines when all is working 
         board_weights = assign_weights(board, board_weights, gfg)
         move = max_move(board_weights)        
 
@@ -124,7 +114,6 @@ def get_chain_location(gfg, board, chains):
     for chain in chains:
         chain_locations, found, num_chains = gfg.patternSearch(board, chain, False)
         if found:
-            print("found chain: " + chain)
             loc = get_empty_cell(board, chain_locations)
             break
     if not found: loc = None
@@ -149,12 +138,6 @@ def get_defensive_move(board, gfg):
 #         board_weights (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
 def assign_weights(board, board_weights, gfg): 
-
-    """
-    idea for optimization: only iterate through cells that are
-    within 5by5 cells of most recent move, since those are the
-    only ones whose weights should theoretically be affected
-    """
 
     player = 'o' # TODO- pass player to this fxn
     
