@@ -158,8 +158,8 @@ def assign_weights(board, board_weights):
                 features_3, features_4 = check_chain_length(2,  temp_board, row, col, player)
                 features_5, features_6 = check_chain_length(1,  temp_board, row, col, player)
                 features = np.array([features_1, features_2,
-                                     features_3, features_4,
-                                     features_5, features_6])
+                                    features_3, features_4,
+                                    features_5, features_6])
                 board_weights[row][col] = np.dot(features, W)
             else: 
                 board_weights[row, col] = -1
