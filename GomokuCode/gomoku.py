@@ -179,10 +179,8 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
     
     # iterate through board 
     for row in board:
-        for col in board:
+        for col in row:
             if is_legal(board, [row, col]):
-                
-                
                 temp_board = copy.deepcopy(board)
                 
                 features = np.empty(6)
@@ -195,26 +193,27 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
                 # TODO - add values to features 
                 
                 # should we do dot product?
-                board_weights[row][col] = np.dot(features, W)
-            
+                board_weights[row][col] = np.dot(features, W)        
     return board_weights
 
 
-def check_chain_length(n,  board, x, y, player):
-    pass
+def check_chain_length(n, board, x, y, player):
+    board_subset = get_board_subset(board, x, y, (5,5))
 
 """
 Board_subset = need to figure out how to do this
-match = ��                                  
+match = ""                                 
 for _ in range(n):
 		match += player
-match _2end = �.�+match+�.�
-match_1end = �.�+match
+match _2end = "."+match+"."
+match_1end = "."+match
 return pattern_finder(board_subset, match_1end), pattern_finder(board_subset, match_2end)
 
 """
 
-
+def get_board_subset(board, x, y, new_shape):
+    cropped_board = board[x - new_shape[0] - 1 : x + new_shape[0], y - new_shape[1] - 1 : y + new_shape[1]]
+    return cropped_board
 # INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move 
 def max_move(board_weights):
