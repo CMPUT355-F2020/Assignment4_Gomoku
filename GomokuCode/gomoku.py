@@ -7,6 +7,7 @@ import copy
 import pandas
 import random
 from pattern_finder import Pattern
+from Weights import Weights
 import time
 
 
@@ -133,21 +134,12 @@ def get_defensive_move(board, gfg):
     defensive_cells = ['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']
     return get_chain_location(gfg, board, defensive_cells)
 
-class Weights:# To be trained
-    def __init__(self,w_1,w_2,w_3,w_4,w_5,w_6):
-        self.w_1 = w_1
-        self.w_2 = w_2
-        self.w_3 = w_3
-        self.w_4 = w_4
-        self.w_5 = w_5
-        self.w_6 = w_6
-        
 # INPUT:  2D board matrix (matrix)
 #         board_weights (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
 def assign_weights(board, board_weights): 
     player = 'o' # TODO- pass player to this fxn
-    w = Weights(1,1,1,1,1,1)
+    w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
     for row in range(0, board_weights.shape[0]):
         for col in range(0, board_weights.shape[1]): 
@@ -158,8 +150,8 @@ def assign_weights(board, board_weights):
                 features_3, features_4 = check_chain_length(2,  temp_board, row, col, player)
                 features_5, features_6 = check_chain_length(1,  temp_board, row, col, player)
                 features = np.array([features_1, features_2,
-                                    features_3, features_4,
-                                    features_5, features_6])
+                                     features_3, features_4,
+                                     features_5, features_6])
                 board_weights[row][col] = np.dot(features, W)
             else: 
                 board_weights[row, col] = -1
