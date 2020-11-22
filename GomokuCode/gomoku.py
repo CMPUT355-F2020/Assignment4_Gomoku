@@ -146,7 +146,6 @@ class Weights:# To be trained
 #         board_weights (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
 def assign_weights(board, board_weights): 
-
     player = 'o' # TODO- pass player to this fxn
     w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
@@ -171,7 +170,6 @@ def assign_weights(board, board_weights):
 # OUTPUT: 
 def check_chain_length(n, board, x, y, player):
     board_subset = get_board_subset(board, x, y, (5,5))
-    
     match = ""
     for _ in range(n):
         match += player
