@@ -208,8 +208,14 @@ def check_chain_length(n, board, x, y, player):
     match = ""
     for i in range(n):
         match += player
+   
     match_2end = "." + match + "."
     match_1end = "." + match
+    
+    chain_locations, found, num_chains_1_open_end = gfg.patternSearch(board_subset, chain, True)
+    chain_locations, found, num_chains_2_open_ends = gfg.patternSearch(board_subset, chain, True)
+    
+    return num_chains_1_open_end, num_chains_2_open_ends
 
 """
 Board_subset = need to figure out how to do this
