@@ -134,7 +134,7 @@ def get_defensive_move(board, gfg):
     return get_chain_location(gfg, board, defensive_cells)
 
 class Weights:# To be trained
-    def  __init__(self,w_1,w_2,w_3,w_4,w_5,w_3):
+    def __init__(self,w_1,w_2,w_3,w_4,w_5,w_6):
         self.w_1 = w_1
         self.w_2 = w_2
         self.w_3 = w_3
