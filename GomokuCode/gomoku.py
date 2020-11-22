@@ -185,17 +185,13 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
         for col in row:
             if is_legal(board, [row, col]):
                 temp_board = copy.deepcopy(board)
-
                 features = np.empty(6)
                 W = np.ones(6)
-
-                chain3_1open, chain3_2open = check_chain_length(3,  board, x, y, player)
-                chain2_1open, chain2_2open = check_chain_length(2,  board, x, y, player)
-                chain1_1open, chain1_2open = check_chain_length(1,  board, x, y, player)
-
+                chain3_1open, chain3_2open = check_chain_length(3, board, x, y, player)
+                chain2_1open, chain2_2open = check_chain_length(2, board, x, y, player)
+                chain1_1open, chain1_2open = check_chain_length(1, board, x, y, player)
                 # TODO - add values to features
-
-                # should we do dot product?
+                # should we do dot product ?
                 board_weights[row][col] = np.dot(features, W)
     return board_weights
 
@@ -203,18 +199,15 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
 # INPUT:  
 # OUTPUT: 
 def check_chain_length(n, board, x, y, player):
-    
     board_subset = get_board_subset(board, x, y, (5,5))
     match = ""
-    for i in range(n):
+    for _ in range(n):
         match += player
-   
     match_2end = "." + match + "."
     match_1end = "." + match
-    
-    chain_locations, found, num_chains_1_open_end = gfg.patternSearch(board_subset, chain, True)
-    chain_locations, found, num_chains_2_open_ends = gfg.patternSearch(board_subset, chain, True)
-    
+    pattern = Pattern()
+    _, _, num_chains_1_open_end = pattern.patternSearch(board_subset, match_1end, True)
+    _, _, num_chains_2_open_ends = pattern.patternSearch(board_subset, match_2end, True)
     return num_chains_1_open_end, num_chains_2_open_ends
 
 """
