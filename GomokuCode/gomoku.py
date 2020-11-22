@@ -12,7 +12,7 @@ import numpy as np
 import copy
 import pandas
 import random
-from pattern_finder import GFG
+from pattern_finder import Pattern
 import time
 
 
@@ -33,8 +33,8 @@ def display(board, x_labels, y_labels):
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns True if one of the players won
 def found_winner(gfg, board):
-    locations, x_winner = gfg.patternSearch(board, 'xxxxx')
-    locations, o_winner = gfg.patternSearch(board, 'ooooo')
+    locations, x_winner, num_chains = gfg.patternSearch(board, 'xxxxx', False)
+    locations, o_winner, num_chains = gfg.patternSearch(board, 'ooooo', False)
     return x_winner or o_winner
 
 
@@ -88,6 +88,11 @@ def computer_player_random(board, gfg, board_weights):
 
     start_time = time.time()
     print("Computer is thinking... ")
+    
+    # these lines are for testing the new changes for pattern_finder.py
+    locations, found, num_chains = gfg.patternSearch(board, 'xxx', True)
+    print(num_chains) 
+    
     move = check_winning_move(board, gfg)
 
     if move == None:
@@ -95,7 +100,7 @@ def computer_player_random(board, gfg, board_weights):
 
     if move == None:
         while not is_legal(board, move):
-            move = random.randint(0, 14), random.randint(0, 14)
+            move = random.randint(0, 14), random.randint(0, 14)            
 
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
     print("Computer took", str(time.time() - start_time), "to make a move")
@@ -139,7 +144,7 @@ def get_empty_cell(board, chain_locations):
 # OUTPUT: returns the location of the empty cell in the chain if it exists
 def get_chain_location(gfg, board, chains):
     for chain in chains:
-        chain_locations, found = gfg.patternSearch(board, chain)
+        chain_locations, found, num_chains = gfg.patternSearch(board, chain, False)
         if found:
             print("found chain: " + chain)
             loc = get_empty_cell(board, chain_locations)
@@ -195,9 +200,11 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
     return board_weights
 
 
+# INPUT:  
+# OUTPUT: 
 def check_chain_length(n, board, x, y, player):
+    
     board_subset = get_board_subset(board, x, y, (5,5))
-
     match = ""
     for i in range(n):
         match += player
@@ -214,9 +221,14 @@ match_1end = "."+match
 return pattern_finder(board_subset, match_1end), pattern_finder(board_subset, match_2end)
 """
 
+
+# INPUT:  
+# OUTPUT: 
 def get_board_subset(board, x, y, new_shape):
     cropped_board = board[x - new_shape[0] - 1 : x + new_shape[0], y - new_shape[1] - 1 : y + new_shape[1]]
     return cropped_board
+
+
 # INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move
 def max_move(board_weights):
@@ -230,7 +242,7 @@ def main():
     col = 15
     x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p']
     y_labels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', '15']
-    gfg = GFG()
+    gfg = Pattern()
 
     # set up the starting conditions
     game_continue = True
@@ -248,3 +260,4 @@ def main():
             game_continue = False
 
 main()
+
