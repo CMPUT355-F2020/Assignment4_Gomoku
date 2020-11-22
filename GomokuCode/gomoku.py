@@ -3,7 +3,7 @@
 
 """
 TO DO LIST:
-    1. implement calculate_heuristics() function
+    1. implement weights 
     2. test out player, optimize program if it's slow
     3. make prettier (merge Game.py code that uses pygame)
 """
@@ -74,8 +74,8 @@ def alternate_moves(board, player, x_labels, gfg, board_weights):
 
     # computer is player 2 (o)
     elif player == 2:
-        move = computer_player_random(board, gfg, board_weights)
-        #move = computer_player(board, gfg, board_weights)
+        print("Computer is thinking... ")
+        move = computer_player(board, gfg, board_weights)
         board[move[0]][move[1]] = 'o'
         next_player = 1
 
@@ -84,14 +84,9 @@ def alternate_moves(board, player, x_labels, gfg, board_weights):
 
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next move
-def computer_player_random(board, gfg, board_weights):
+def computer_player(board, gfg, board_weights):
 
     start_time = time.time()
-    print("Computer is thinking... ")
-    
-    # these lines are for testing the new changes for pattern_finder.py
-    locations, found, num_chains = gfg.patternSearch(board, 'xxx', True)
-    print(num_chains) 
     
     move = check_winning_move(board, gfg)
 
@@ -99,34 +94,17 @@ def computer_player_random(board, gfg, board_weights):
         move = get_defensive_move(board, gfg)
 
     if move == None:
-        while not is_legal(board, move):
-            move = random.randint(0, 14), random.randint(0, 14)            
+        
+        # comment out 2 lines when all is working 
+        #while not is_legal(board, move):
+        #    move = random.randint(0, 14), random.randint(0, 14)   
+        
+        # un-comment out 2 lines when all is working 
+        board_weights = assign_weights(board, board_weights, gfg)
+        move = max_move(board_weights)        
 
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
     print("Computer took", str(time.time() - start_time), "to make a move")
-
-    return move
-
-
-# INPUT:  2D board matrix and the pattern_finder object
-# OUTPUT: returns the location of the next move
-def computer_player(board, gfg, board_weights):
-
-    start_time = time.time()
-    print("Computer is thinking... ")
-    distance_from_node = 5
-
-    move = check_winning_move(board, gfg)
-
-    if move == None:
-            move = get_defensive_move(board, gfg)
-
-    if move == None:
-        board_weights = assign_weights(board, board_weights)
-        move = max_move(board_weights)
-
-    print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
-    print("Computer took", str(time.time() - start_time), "seconds to make a move")
 
     return move
 
@@ -170,7 +148,7 @@ def get_defensive_move(board, gfg):
 # INPUT:  2D board matrix (matrix)
 #         board_weights (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
-def assign_weights(board, board_weights): ## add most recent move as argument?
+def assign_weights(board, board_weights, gfg): 
 
     """
     idea for optimization: only iterate through cells that are
@@ -178,33 +156,37 @@ def assign_weights(board, board_weights): ## add most recent move as argument?
     only ones whose weights should theoretically be affected
     """
 
-    player = 'x' # TODO- pass player to this fxn
-
-    # iterate through board
-    for row in board:
-        for col in row:
+    player = 'o' # TODO- pass player to this fxn
+    
+    W = np.array([3, 3, 2, 2, 1, 1])
+    
+    for row in range(0, board_weights.shape[0]):
+        for col in range(0, board_weights.shape[1]): 
+           
             if is_legal(board, [row, col]):
+                
                 temp_board = copy.deepcopy(board)
-
+                temp_board[row, col] = 'o'
+                
                 features = np.empty(6)
-                W = np.ones(6)
-
-                chain3_1open, chain3_2open = check_chain_length(3,  board, x, y, player)
-                chain2_1open, chain2_2open = check_chain_length(2,  board, x, y, player)
-                chain1_1open, chain1_2open = check_chain_length(1,  board, x, y, player)
-
-                # TODO - add values to features
-
-                # should we do dot product?
+                features[0], features[1] = check_chain_length(3,  temp_board, row, col, player, gfg)
+                features[2], features[3] = check_chain_length(2,  temp_board, row, col, player, gfg)
+                features[4], features[5] = check_chain_length(1,  temp_board, row, col, player, gfg)
+                
                 board_weights[row][col] = np.dot(features, W)
+                
+            else: 
+                board_weights[row, col] = -1
+                
     return board_weights
 
 
-# INPUT:  
-# OUTPUT: 
-def check_chain_length(n, board, x, y, player):
+# INPUT: n is the length of the chain to search in location (x, y)
+# OUTPUT: returns the number of chains of length n that have 1 and 2 open ends
+def check_chain_length(n, board, x, y, player, gfg):
     
     board_subset = get_board_subset(board, x, y, (5,5))
+    
     match = ""
     for i in range(n):
         match += player
@@ -212,24 +194,14 @@ def check_chain_length(n, board, x, y, player):
     match_2end = "." + match + "."
     match_1end = "." + match
     
-    chain_locations, found, num_chains_1_open_end = gfg.patternSearch(board_subset, chain, True)
-    chain_locations, found, num_chains_2_open_ends = gfg.patternSearch(board_subset, chain, True)
+    chain_locations, found, num_chains_1_open_end = gfg.patternSearch(board, match_1end, True)
+    chain_locations, found, num_chains_2_open_ends = gfg.patternSearch(board, match_2end, True)
     
     return num_chains_1_open_end, num_chains_2_open_ends
 
-"""
-Board_subset = need to figure out how to do this
-match = ""
-for _ in range(n):
-		match += player
-match _2end = "."+match+"."
-match_1end = "."+match
-return pattern_finder(board_subset, match_1end), pattern_finder(board_subset, match_2end)
-"""
 
-
-# INPUT:  
-# OUTPUT: 
+# INPUT: the board and its desired shape (surrounding locations x,y)
+# OUTPUT: returns a 5by5 subset of the board
 def get_board_subset(board, x, y, new_shape):
     cropped_board = board[x - new_shape[0] - 1 : x + new_shape[0], y - new_shape[1] - 1 : y + new_shape[1]]
     return cropped_board
@@ -266,4 +238,3 @@ def main():
             game_continue = False
 
 main()
-
