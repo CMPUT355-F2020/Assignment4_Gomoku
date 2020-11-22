@@ -217,8 +217,27 @@ def get_board_subset(board, x, y, new_shape):
 # INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move
 def max_move(board_weights):
-    return np.unravel_index(board_weights.argmax(), board_weights.shape) # add random? np.random.choice
 
+    max = board_weights.max()
+    max_moves = []
+    count = 0
+    array_count = -1
+    item_count = -1
+    for array in board_weights:
+        array_count += 1
+        for item in array:
+            item_count += 1
+            if item_count > 15:
+                item_count = item_count % 15
+            if item == max:
+                count += 1
+                move = (array_count, item_count)
+                max_moves.append(move)
+
+    random_number = random.randint(0, count-1)
+    random_max = max_moves[random_number]
+
+    return random_max # add random? np.random.choice
 
 def main():
 
