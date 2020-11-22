@@ -15,8 +15,13 @@ import time
 # OUTPUT: returns 2D board matrix
 def create_board(row,col):
     board = np.full((row, col), '.')
-    weights = np.full((row, col), 0)
-    return board, weights
+    return board
+
+# INPUT:  row and column dimensions
+# OUTPUT: returns 2D weight matrix
+def create_weight_matrix(row,col):
+    weights = np.full((row, col), 0) # TODO- reset matrix each move
+    return weights
 
 
 # INPUT:  2D board matrix and the x and y axis labels
@@ -92,6 +97,7 @@ def computer_player(board, gfg, board_weights):
     
     if move == None:
         board_weights = assign_weights(board, board_weights)
+        print(str(board_weights))
         move = max_move(board_weights)        
 
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
@@ -134,27 +140,54 @@ def get_defensive_move(board, gfg):
     defensive_cells = ['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']
     return get_chain_location(gfg, board, defensive_cells)
 
+
 # INPUT:  2D board matrix (matrix)
 #         board_weights (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
-def assign_weights(board, board_weights): 
-    player = 'o' # TODO- pass player to this fxn
+def assign_weights(board, board_weights):   # TODO- clean this fxn 
+    
+    # TODO- check hr around latest move only 
+    
+    player = 'o' 
+    opponent = 'x'
+    
     w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
     for row in range(0, board_weights.shape[0]):
         for col in range(0, board_weights.shape[1]): 
             if is_legal(board, [row, col]):
                 temp_board = copy.deepcopy(board)
-                temp_board[row, col] = 'o'
+                temp_board[row, col] = player 
+                
+                # player o 
                 features_1, features_2 = check_chain_length(3,  temp_board, row, col, player)
                 features_3, features_4 = check_chain_length(2,  temp_board, row, col, player)
                 features_5, features_6 = check_chain_length(1,  temp_board, row, col, player)
+                
                 features = np.array([features_1, features_2,
                                      features_3, features_4,
                                      features_5, features_6])
-                board_weights[row][col] = np.dot(features, W)
+                #board_weights[row][col] = np.dot(features, W)
+                heuristic_o = np.dot(features, W)
+                
+                
+                # player x
+                features_1, features_2 = check_chain_length(3,  temp_board, row, col, opponent)
+                features_3, features_4 = check_chain_length(2,  temp_board, row, col, opponent)
+                features_5, features_6 = check_chain_length(1,  temp_board, row, col, opponent)
+                
+                features = np.array([features_1, features_2,
+                                     features_3, features_4,
+                                     features_5, features_6])
+                
+                #board_weights[row][col] = np.dot(features, W)
+                heuristic_x = np.dot(features, W)
+                
+                board_weights[row][col] = heuristic_o - heuristic_x # fraction of x?
+                
             else: 
-                board_weights[row, col] = -1
+                board_weights[row, col] = -1 # TODO - set to None
+   
     return board_weights
 
 
@@ -184,7 +217,7 @@ def get_board_subset(board, x, y, new_shape):
 # INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move
 def max_move(board_weights):
-    return np.unravel_index(board_weights.argmax(), board_weights.shape)
+    return np.unravel_index(board_weights.argmax(), board_weights.shape) # add random? np.random.choice
 
 
 def main():
@@ -198,13 +231,14 @@ def main():
 
     # set up the starting conditions
     game_continue = True
-    player = 1
-    current_board_state, board_weights = create_board(row,col)
+    player = 1 # TODO - first player chosen randomly 
+    current_board_state = create_board(row,col)
     display(current_board_state, x_labels, y_labels)
 
     # play game
     while game_continue:
         print ("Player " + str(player) +"'s turn")
+        board_weights = create_weight_matrix(row,col)
         current_board_state, board_weights, player = alternate_moves(current_board_state, player, x_labels, gfg, board_weights)
         display(current_board_state, x_labels, y_labels)
         if found_winner(gfg, current_board_state):
