@@ -88,7 +88,7 @@ def computer_player(board, gfg, board_weights):
         move = get_defensive_move(board, gfg)
 
     if move == None: # special cases 
-        move = get_chain_location(gfg, board, ['.x.xx.','.ooo..'])
+        move = get_chain_location(gfg, board, ['.o.oo.','.ooo..'])
     
     if move == None:
         board_weights = assign_weights(board, board_weights)
@@ -168,6 +168,7 @@ def check_chain_length(n, board, x, y, player):
     match_2end = "." + match + "."
     match_1end = "." + match
     pattern = Pattern()
+    if board_subset.shape[0] == 0 or board_subset.shape[1] == 0: board_subset = board
     _, _, num_chains_1_open_end = pattern.patternSearch(board_subset, match_1end, True)
     _, _, num_chains_2_open_ends = pattern.patternSearch(board_subset, match_2end, True)
     return num_chains_1_open_end, num_chains_2_open_ends
