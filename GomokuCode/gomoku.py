@@ -8,6 +8,7 @@ import pandas
 import random
 from pattern_finder import Pattern
 from Weights import Weights
+from human_knowledge import *
 import time
 
 
