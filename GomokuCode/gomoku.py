@@ -3,13 +3,14 @@
 # Group Name: ???
 
 import numpy as np
-import copy
-import pandas
-import random
+import copy, pandas, random, time
 from pattern_finder import Pattern
 from Weights import Weights
 from human_knowledge import *
-import time
+
+
+player_1 = 'x'
+player_2 = 'o'
 
 
 # INPUT:  row and column dimensions
@@ -18,10 +19,11 @@ def create_board(row,col):
     board = np.full((row, col), '.')
     return board
 
+
 # INPUT:  row and column dimensions
 # OUTPUT: returns 2D weight matrix
 def create_weight_matrix(row,col):
-    weights = np.full((row, col), 0) # TODO- reset matrix each move
+    weights = np.full((row, col), 0)
     return weights
 
 
@@ -65,39 +67,53 @@ def is_legal(board, cell):
 
 # INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object
 # OUTPUT: the new state of the board and the next player
-def alternate_moves(board, player, x_labels, gfg, board_weights):
+def alternate_moves(board, player, x_labels):
+    
+    pattern = Pattern()
 
-    # human is player 1 (x)
-    if player == 1:
-        row, col = get_user_next_move(board, x_labels, len(board[0]))
-        board[row][col] = 'x'
-        next_player = 2
+    if player == player_1:
+        
+        # human player commented out for now 
+        # row, col = get_user_next_move(board, x_labels, len(board[0]))
+        # board[row][col] = player_1
+        
+        # computer playing iteself
+        opponent = player_2
+        move = computer_player(board, pattern, player, opponent)
+        board[move[0]][move[1]] = player_1        
+        next_player = player_2
 
-    # computer is player 2 (o)
-    elif player == 2:
-        move = computer_player(board, gfg, board_weights)
-        board[move[0]][move[1]] = 'o'
-        next_player = 1
+    elif player == player_2:
+        opponent = player_1
+        move = computer_player(board, pattern, player, opponent)
+        board[move[0]][move[1]] = player_2
+        next_player = player_1
 
-    return board, board_weights, next_player
+    return board, next_player
 
 
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next move
-def computer_player(board, gfg, board_weights):
+def computer_player(board, pattern, player, opponent):
 
     start_time = time.time()
     
-    move = check_winning_move(board, gfg)
-
-    if move == None:
-        move = get_defensive_move(board, gfg)
-
-    if move == None: # special cases 
-        move = get_chain_location(gfg, board, ['.o.oo.','.ooo..'])
+    # 1. check winning moves
+    move = check_winning_move(board, pattern, player)
     
-    if move == None:
-        board_weights = assign_weights(board, board_weights)
+    # 2. check defensive moves 
+    if move == None: 
+        move = get_defensive_move(board, pattern, player)
+        
+    # 3. check special case moves  
+    if move == None: 
+        if player == player_1: special_cases = ['.x.xx.','.xxx..']
+        elif player == player_2: special_cases = ['.o.oo.','.ooo..']
+        move = get_chain_location(pattern, board, special_cases)
+    
+    # 4. make move based on trained weights 
+    if move == None: 
+        board_weights = assign_weights(board, player, opponent)
         print(str(board_weights))
         move = max_move(board_weights)        
 
@@ -118,9 +134,9 @@ def get_empty_cell(board, chain_locations):
 
 # INPUT:  2D board matrix, the pattern_finder object, and a list of chain locations to search through
 # OUTPUT: returns the location of the empty cell in the chain if it exists
-def get_chain_location(gfg, board, chains):
+def get_chain_location(pattern, board, chains):
     for chain in chains:
-        chain_locations, found, num_chains = gfg.patternSearch(board, chain, False)
+        chain_locations, found, num_chains = pattern.patternSearch(board, chain, False)
         if found:
             loc = get_empty_cell(board, chain_locations)
             break
@@ -130,27 +146,27 @@ def get_chain_location(gfg, board, chains):
 
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next move
-def check_winning_move(board, gfg):
-    winning_moves = ['.oooo', 'o.ooo', 'oo.oo']
-    return get_chain_location(gfg, board, winning_moves)
+def check_winning_move(board, pattern, player):
+    if player == player_1: winning_moves = ['.xxxx', 'x.xxx', 'xx.xx']
+    elif player == player_2: winning_moves = ['.oooo', 'o.ooo', 'oo.oo']
+    return get_chain_location(pattern, board, winning_moves)
 
 
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next best defensive move if it exists
-def get_defensive_move(board, gfg):
-    defensive_cells = ['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']
-    return get_chain_location(gfg, board, defensive_cells)
+def get_defensive_move(board, pattern, player):
+    if player == player_1: defensive_cells = ['.oooo', 'o.ooo', 'oo.oo', '.o.oo.', '.ooo..']
+    elif player == player_2: defensive_cells = ['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']   
+    return get_chain_location(pattern, board, defensive_cells)
 
 
 # INPUT:  2D board matrix (matrix)
-#         board_weights (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
-def assign_weights(board, board_weights):   # TODO- clean this fxn 
+def assign_weights(board, player, opponent):   # TODO- clean this fxn 
     
     # TODO- check hr around latest move only 
     
-    player = 'o' 
-    opponent = 'x'
+    board_weights = create_weight_matrix(len(board),len(board[0]))
     
     w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
@@ -168,7 +184,6 @@ def assign_weights(board, board_weights):   # TODO- clean this fxn
                 features = np.array([features_1, features_2,
                                      features_3, features_4,
                                      features_5, features_6])
-                #board_weights[row][col] = np.dot(features, W)
                 heuristic_o = np.dot(features, W)
                 
                 
@@ -180,8 +195,6 @@ def assign_weights(board, board_weights):   # TODO- clean this fxn
                 features = np.array([features_1, features_2,
                                      features_3, features_4,
                                      features_5, features_6])
-                
-                #board_weights[row][col] = np.dot(features, W)
                 heuristic_x = np.dot(features, W)
                 
                 board_weights[row][col] = heuristic_o - heuristic_x # fraction of x?
@@ -192,8 +205,8 @@ def assign_weights(board, board_weights):   # TODO- clean this fxn
     return board_weights
 
 
-# INPUT:  
-# OUTPUT: 
+# INPUT: the length of the chain to check, the location (x, y), and the current player
+# OUTPUT: the number of chains of length n with 1 and 2 open ends 
 def check_chain_length(n, board, x, y, player):
     board_subset = get_board_subset(board, x, y, (5,5))
     match = ""
@@ -209,14 +222,14 @@ def check_chain_length(n, board, x, y, player):
 
 
 # INPUT: the board and its desired shape (surrounding locations x,y)
-# OUTPUT: returns a 5by5 subset of the board
+# OUTPUT: returns a subset of the board
 def get_board_subset(board, x, y, new_shape):
     cropped_board = board[x - new_shape[0] - 1 : x + new_shape[0], y - new_shape[1] - 1 : y + new_shape[1]]
     return cropped_board
 
 
 # INPUT:  2D board weight matrix
-# OUTPUT: returns the location of the best offensive move
+# OUTPUT: returns the location of the best offensive move 
 def max_move(board_weights):
 
     max = board_weights.max()
@@ -238,7 +251,7 @@ def max_move(board_weights):
     random_number = random.randint(0, count-1)
     random_max = max_moves[random_number]
 
-    return random_max # add random? np.random.choice
+    return random_max 
 
 def main():
 
@@ -247,21 +260,20 @@ def main():
     col = 15
     x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p']
     y_labels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', '15']
-    gfg = Pattern()
+    pattern = Pattern()
 
     # set up the starting conditions
     game_continue = True
-    player = 1 # TODO - first player chosen randomly 
+    current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
     display(current_board_state, x_labels, y_labels)
 
     # play game
     while game_continue:
-        print ("Player " + str(player) +"'s turn")
-        board_weights = create_weight_matrix(row,col)
-        current_board_state, board_weights, player = alternate_moves(current_board_state, player, x_labels, gfg, board_weights)
+        print ("Player " + current_player +"'s turn")
+        current_board_state, current_player = alternate_moves(current_board_state, current_player, x_labels)
         display(current_board_state, x_labels, y_labels)
-        if found_winner(gfg, current_board_state):
+        if found_winner(pattern, current_board_state):
             print("Game Over")
             game_continue = False
 
