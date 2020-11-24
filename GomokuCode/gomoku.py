@@ -79,7 +79,8 @@ def alternate_moves(board, player, x_labels, gfg, board_weights, history):
         board[move[0]][move[1]] = 'o'
         next_player = 1
 
-    history.append(move)
+        print(move)
+        # history.append(move)
 
     return board, board_weights, next_player
 
@@ -156,15 +157,25 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
     opponent = 'x'
 
     #get region around last move
-    prev_move = history[-1]
-    board_subset = get_board_subset(board, prev_move[0], prev_move[1], (5,5))
+    try:
+        prev_move = history[-1]
+    except:
+        prev_move = None
+
+    if prev_move == None:
+        # calcualte all weights
+        board_subset = board_weights
+    else:
+        board_subset = get_board_subset(board, prev_move[0], prev_move[1], (5,5))
+
 
     w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
     for row in range(0, board_subset.shape[0]):
         for col in range(0, board_subset.shape[1]):
             if is_legal(board, [row, col]):
-                board_subset[row, col] = player
+                #print(row, col)
+                # board_subset[row, col] = player
 
                 # player o
                 features_1, features_2 = check_chain_length(3,  board_subset, row, col, player)
@@ -193,8 +204,12 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
                 board_subset[row][col] = heuristic_o - heuristic_x * (1/2)
 
             else:
-                board_subset[row, col] = None
-   
+                board_subset[row, col] = 0
+
+    #print(board_subset)
+    #print(board_weights)
+    #print(history)
+
     return board_weights
 
 
@@ -237,7 +252,7 @@ def max_move(board_weights):
         array_count += 1
         for item in array:
             item_count += 1
-            if item_count > 15:
+            if item_count >= 14:
                 item_count = item_count % 15
             if item == max:
                 count += 1
@@ -246,6 +261,10 @@ def max_move(board_weights):
 
     random_number = random.randint(0, count-1)
     random_max = max_moves[random_number]
+
+    print(random_max)
+    print(max_moves)
+    print(len(max_moves))
 
     return random_max # add random? np.random.choice
 
