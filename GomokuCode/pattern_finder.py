@@ -1,10 +1,11 @@
-# This program searches for a given chain in a 2D grid 
+# We found the base for this code online (URL is below)
+# https://www.geeksforgeeks.org/search-a-word-in-a-2d-grid-of-characters/
+# Note however, that we changed the code quite a bit to fit our needs
 
-# We do not take credit for this code, but we have adapted it to fit our needs
-# Found this code on this website: https://www.geeksforgeeks.org/search-a-word-in-a-2d-grid-of-characters/
-import numpy as np
+# This program searches for a given chain in the board
 
 class Pattern: 
+	
 	def __init__(self): 
 		self.R = None
 		self.C = None
@@ -18,8 +19,8 @@ class Pattern:
 		            [0, -1]]   # right horizontally 		
 		
 		
-	# the search2D function searches all 8 directions for a chain in the board at location (row, col)  
-	def search2D(self, board, row, col, chain, full_search): 
+	# the search function searches all 8 directions for a chain in the board at location (row, col)  
+	def search(self, board, row, col, chain, full_search): 
 		number_chains = 0
 		direction_x = 2
 		direction_y = 2
@@ -49,14 +50,14 @@ class Pattern:
 					break
 			
 			if flag: 
-				if full_search == False:
-					return x, y, True, 1
+				if full_search == False: return x, y, True, 1
 				
 				flag = False 
 				found = True 
 				direction_x = x
 				direction_y = y 
 				number_chains += 1
+				
 		return direction_x, direction_y, found, number_chains
 	
 	
@@ -66,11 +67,11 @@ class Pattern:
 		self.R = len(board) 
 		self.C = len(board[0]) 
 		
-		# iterate through every cell in board to search for the chain 
+		# iterate through the board until we find the first instance of the chain 
 		if not search_full_board:
 			for row in range(self.R): 
 				for col in range(self.C): 
-					x_dir, y_dir, found, num_chains = self.search2D(board, row, col, chain, search_full_board)
+					x_dir, y_dir, found, num_chains = self.search(board, row, col, chain, search_full_board)
 					if found: 
 						chain_locations = [[row,col]]
 						for _ in range(4):
@@ -80,11 +81,12 @@ class Pattern:
 						return chain_locations, True, 0
 			return [], False, 0
 		
+		# iterate through every cell in board to search for all instances of the chain 
 		else:
 			counter = 0
 			for row in range(self.R): 
 				for col in range(self.C): 
-					x_dir, y_dir, found, num_chains = self.search2D(board, row, col, chain, search_full_board)
+					x_dir, y_dir, found, num_chains = self.search(board, row, col, chain, search_full_board)
 					if found: counter += num_chains
 			return [], counter>0, counter//2 
 		
