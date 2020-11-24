@@ -72,4 +72,15 @@ def train():
     brains = brain_init(parent_brains)
     pass #TO BE FINISHED
 
+
+# parameters are 2 classes 
+def find_winner(weight1, weight2):
+    
+    # play game using weights
+    # weight1 = x
+    # weight2 = o
+    
+    return weight_winner, num_moves_x, num_moves_o 
+
+
 crossover(0.5)

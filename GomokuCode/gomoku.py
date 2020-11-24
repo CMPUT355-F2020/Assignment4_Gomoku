@@ -71,16 +71,18 @@ def alternate_moves(board, player, x_labels):
     
     pattern = Pattern()
 
-    if player == player_1:
+    if player == player_1:  
         
+        
+        ## when both players are computers something goes wrong TODO- fix bug 
         ## comment out these 2 lines out if we want the computer to play itself 
-        row, col = get_user_next_move(board, x_labels, len(board[0]))
-        board[row][col] = player_1
+        #row, col = get_user_next_move(board, x_labels, len(board[0]))
+        #board[row][col] = player_1
         
         ## uncomment these 3 lines if we want the computer to play iteself
-        #opponent = player_2
-        #move = computer_player(board, pattern, player, opponent)
-        #board[move[0]][move[1]] = player_1        
+        opponent = player_2
+        move = computer_player(board, pattern, player, opponent)
+        board[move[0]][move[1]] = player_1        
         
         next_player = player_2
 
@@ -99,44 +101,47 @@ def computer_player(board, pattern, player, opponent):
 
     start_time = time.time()
 
-    op = Opening()
+    op = Opening(player, opponent)
     bk = MustBlock()
-
-    #  check the first move
+    
+    # 1. check opening moves 
+    
+    #  first move
     if op.first_move(board):
         move = [7,7]
         return move
-
-    # opening defence
+    
+    # second move
     if op.defence(board) == 1:
         for i in range(15):
             for j in range(15):
-                if board[i][j] == 'x':
-                    move = [i+1,j] #up
-                    #move = [i-1,j+1] #diag
+                if board[i][j] == opponent:   
+                    #move = [i+1,j] #up
+                    move = [i-1,j+1] #diag
                     return move
+    # third move
     elif op.defence(board) == 2:
         for i in range(15):
             for j in range(15):
-                if board[i][j] == 'x':
+                if board[i][j] == opponent:   
                     if is_legal(board, [i+1, j+1]):
                         move = [i+1,j+1]
                         return move
 
-    # 1. check winning moves
+    # 2. check winning moves
     move = check_winning_move(board, pattern, player)
 
-    # 2. check defensive moves
+    # 3. check defensive moves
     if move == None: 
         move = get_defensive_move(board, pattern, player)
 
-    # 3. check must-block case moves
+    # 4. check must-block case moves
     if move == None:
         if player == player_1: block = bk.player_1[0]
         elif player == player_2: block = bk.player_2[0]
         move = get_chain_location(pattern, board, block)
 
-    # 4. make move based on trained weights 
+    # 5. make move based on trained weights 
     if move == None:
 
         board_weights = assign_weights(board, player, opponent)
