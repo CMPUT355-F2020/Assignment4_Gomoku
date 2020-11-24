@@ -74,7 +74,7 @@ class Pattern:
 					x_dir, y_dir, found, num_chains = self.search(board, row, col, chain, search_full_board)
 					if found: 
 						chain_locations = [[row,col]]
-						for _ in range(4):
+						for _ in range(len(chain)-1):
 							row += x_dir
 							col += y_dir
 							chain_locations.append([row,col])
@@ -88,5 +88,4 @@ class Pattern:
 				for col in range(self.C): 
 					x_dir, y_dir, found, num_chains = self.search(board, row, col, chain, search_full_board)
 					if found: counter += num_chains
-			return [], counter>0, counter//2 
-		
+			return [], counter>0, counter//2 		

@@ -36,8 +36,8 @@ def display(board, x_labels, y_labels):
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns True if one of the players won
 def found_winner(gfg, board):
-    locations, x_winner, num_chains = gfg.patternSearch(board, 'xxxxx', False)
-    locations, o_winner, num_chains = gfg.patternSearch(board, 'ooooo', False)
+    _, x_winner, _ = gfg.patternSearch(board, 'xxxxx', False)
+    _, o_winner, _ = gfg.patternSearch(board, 'ooooo', False)
     return x_winner or o_winner
 
 
@@ -73,14 +73,15 @@ def alternate_moves(board, player, x_labels):
 
     if player == player_1:
         
-        # human player commented out for now 
-        # row, col = get_user_next_move(board, x_labels, len(board[0]))
-        # board[row][col] = player_1
+        ## comment out these 2 lines out if we want the computer to play itself 
+        row, col = get_user_next_move(board, x_labels, len(board[0]))
+        board[row][col] = player_1
         
-        # computer playing iteself
-        opponent = player_2
-        move = computer_player(board, pattern, player, opponent)
-        board[move[0]][move[1]] = player_1        
+        ## uncomment these 3 lines if we want the computer to play iteself
+        #opponent = player_2
+        #move = computer_player(board, pattern, player, opponent)
+        #board[move[0]][move[1]] = player_1        
+        
         next_player = player_2
 
     elif player == player_2:
@@ -114,7 +115,7 @@ def computer_player(board, pattern, player, opponent):
     # 4. make move based on trained weights 
     if move == None: 
         board_weights = assign_weights(board, player, opponent)
-        print(str(board_weights))
+        # print(str(board_weights)) 
         move = max_move(board_weights)        
 
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
