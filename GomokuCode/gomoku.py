@@ -98,22 +98,47 @@ def alternate_moves(board, player, x_labels):
 def computer_player(board, pattern, player, opponent):
 
     start_time = time.time()
-    
+
+    op = Opening()
+    bk = MustBlock()
+
+    #  check the first move
+    if op.first_move(board):
+        move = [7,7]
+        return move
+
+    # opening defence
+    if op.defence(board) == 1:
+        for i in range(15):
+            for j in range(15):
+                if board[i][j] == 'x':
+                    move = [i+1,j] #up
+                    #move = [i-1,j+1] #diag
+                    return move
+    elif op.defence(board) == 2:
+        for i in range(15):
+            for j in range(15):
+                if board[i][j] == 'x':
+                    if is_legal(board, [i+1, j+1]):
+                        move = [i+1,j+1]
+                        return move
+
     # 1. check winning moves
     move = check_winning_move(board, pattern, player)
-    
-    # 2. check defensive moves 
+
+    # 2. check defensive moves
     if move == None: 
         move = get_defensive_move(board, pattern, player)
-        
-    # 3. check special case moves  
-    if move == None: 
-        if player == player_1: special_cases = ['.x.xx.','.xxx..']
-        elif player == player_2: special_cases = ['.o.oo.','.ooo..']
-        move = get_chain_location(pattern, board, special_cases)
-    
+
+    # 3. check must-block case moves
+    if move == None:
+        if player == player_1: block = bk.player_1[0]
+        elif player == player_2: block = bk.player_2[0]
+        move = get_chain_location(pattern, board, block)
+
     # 4. make move based on trained weights 
-    if move == None: 
+    if move == None:
+
         board_weights = assign_weights(board, player, opponent)
         # print(str(board_weights)) 
         move = max_move(board_weights)        
@@ -132,7 +157,6 @@ def get_empty_cell(board, chain_locations):
             return location
     return [-1,-1]
 
-
 # INPUT:  2D board matrix, the pattern_finder object, and a list of chain locations to search through
 # OUTPUT: returns the location of the empty cell in the chain if it exists
 def get_chain_location(pattern, board, chains):
@@ -148,16 +172,18 @@ def get_chain_location(pattern, board, chains):
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next move
 def check_winning_move(board, pattern, player):
-    if player == player_1: winning_moves = ['.xxxx', 'x.xxx', 'xx.xx']
-    elif player == player_2: winning_moves = ['.oooo', 'o.ooo', 'oo.oo']
+    wn = Winning()
+    if player == player_1: winning_moves = wn.player_1
+    elif player == player_2: winning_moves = wn.player_2
     return get_chain_location(pattern, board, winning_moves)
 
 
 # INPUT:  2D board matrix and the pattern_finder object
 # OUTPUT: returns the location of the next best defensive move if it exists
 def get_defensive_move(board, pattern, player):
-    if player == player_1: defensive_cells = ['.oooo', 'o.ooo', 'oo.oo', '.o.oo.', '.ooo..']
-    elif player == player_2: defensive_cells = ['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']   
+    bk = MustBlock()
+    if player == player_1: defensive_cells = bk.player_1[1]
+    elif player == player_2: defensive_cells = bk.player_2[1]
     return get_chain_location(pattern, board, defensive_cells)
 
 

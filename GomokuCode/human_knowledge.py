@@ -6,11 +6,23 @@ class Opening:
     def __init__(self):
         pass
 
-    def defence(self):
-        pass # any attached cell
+    def defence(self,board):
+        count = 0
+        for i in range(15):
+            for j in range (15):
+                if board[i][j] == 'x':
+                    count += 1
+        if count < 3 and count >= 0:
+            return count
 
+    #Attack
     def first_move(self,board):# check whether the board is empty
-        if board == np.full((15, 15),'.'):
+        count = 0
+        for i in range(15):
+            for j in range (15):
+                if board[i][j] == 'x' or board[i][j] == 'o':
+                    count += 1
+        if count == 0:
             return True # always place the stone in the middle (8h) Best_move & Best_runtime
 
     def second_move_diagonal(self,board):#check whether the opponent put a stone in the diagonal directions
@@ -20,6 +32,16 @@ class Opening:
     def second_move_horizontal(self,board):#check whether the opponent put a stone in the horizontal directions
         if (board[7][8] + board[8][7] + board[8][9] + board[9][8]) != '....':
             return True
+
+class MustBlock:
+    def __init__(self):
+        self.player_1 = [['.x.xx.','.xxx..'],['.oooo', 'o.ooo', 'oo.oo', '.o.oo.', '.ooo..']]
+        self.player_2 = [['.o.oo.','.ooo..'],['.xxxx', 'x.xxx', 'xx.xx', '.x.xx.', '.xxx..']]
+
+class Winning:
+    def __init__(self):
+        self.player_1 = ['.xxxx', 'x.xxx', 'xx.xx']
+        self.player_2 = ['.oooo', 'o.ooo', 'oo.oo']
 
 class Other:
     def __init__(self):
