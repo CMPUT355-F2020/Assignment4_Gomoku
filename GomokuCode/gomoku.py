@@ -71,7 +71,7 @@ def alternate_moves(board, player, x_labels, gfg, board_weights, history):
     if player == 1:
         row, col = get_user_next_move(board, x_labels, len(board[0]))
         board[row][col] = 'x'
-        move = [row,col]
+        history.append([row,col])
         next_player = 2
 
     # computer is player 2 (o)
@@ -79,9 +79,10 @@ def alternate_moves(board, player, x_labels, gfg, board_weights, history):
         move = computer_player(board, gfg, board_weights, history)
         board[move[0]][move[1]] = 'o'
         next_player = 1
+        history.append(move)
 
         # print(move)
-    history.append(move)
+    
 
     return board, board_weights, next_player
 
@@ -169,7 +170,6 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
         
     else:
         board_subset = get_board_subset(board, prev_move[0], prev_move[1], (5,5))
-        print("board_subset: \n",board_subset)
 
     w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
@@ -208,8 +208,7 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
             else:
                 board_subset[row, col] = 0
 
-    print(board_subset)
-    print(board_weights)
+    print("board_subset in assign weights \n", board_subset)
     print("history: ", history)
 
     return board_weights
