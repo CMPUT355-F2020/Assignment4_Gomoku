@@ -101,4 +101,14 @@ def find_winner(weights_x, weights_o):
     return weight_winner, num_moves_x, num_moves_o 
 
 
-crossover(0.5)
+a = Weights()
+a.w_1 = 1
+a.w_2 = 0
+a.w_3 = 2
+a.w_4 = 1
+a.w_5 = 20
+a.w_6 = 20
+b = Weights()
+x,y,z = find_winner(a,b)
+print(x.w_1)
+print(y, z)
