@@ -151,13 +151,13 @@ def computer_player(board, pattern, player, opponent, weights_x, weights_o):
     if move == None:
 
         board_weights = assign_weights(board, player, opponent, weights_x, weights_o)
-        print(str(board_weights)) 
+        #print(str(board_weights))
         move = max_move(board_weights, board)        
 
-    print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
-    print("Computer took", str(time.time() - start_time), "to make a move")
+    #print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
+    #print("Computer took", str(time.time() - start_time), "to make a move")
     
-    print("IS LEGAL:"+str(is_legal(board, move)))
+    #print("IS LEGAL:"+str(is_legal(board, move)))
 
     return move
 

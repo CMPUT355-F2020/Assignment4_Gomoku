@@ -21,14 +21,14 @@ def compare_weights(weights_x, weights_o):
     game_continue = True
     current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
-    display(current_board_state, x_labels, y_labels)
+    #display(current_board_state, x_labels, y_labels)
 
     # play game
     weights = Weights()
     while game_continue:
-        print ("Player " + current_player +"'s turn")
+        #print ("Player " + current_player +"'s turn")
         current_board_state, current_player = alternate_moves(current_board_state, current_player, x_labels, weights_x, weights_o)
-        display(current_board_state, x_labels, y_labels)
+        #display(current_board_state, x_labels, y_labels)
         
         isWin, winner =   found_winner(pattern, current_board_state)
         
