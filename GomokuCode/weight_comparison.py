@@ -33,7 +33,7 @@ def compare_weights(weights_x, weights_o):
         isWin, winner =   found_winner(pattern, current_board_state)
         
         if isWin:
-            print("Game Over")
+            #print("Game Over")
             game_continue = False
 
     return current_board_state, winner 

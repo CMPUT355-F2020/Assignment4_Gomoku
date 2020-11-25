@@ -112,6 +112,7 @@ def selection(brain_list,mode):# mode = elimination or parent
         e = sorted(range(len(f_list)), key=lambda i: f_list[i], reverse=False)[:1]
         return brain_list[e[0]]
 
+# This function returns the best weights so far
 def optimal_weights(brain_list,fitness_list):
     max_value = max(fitness_list)
     max_index = fitness_list.index(max_value)
@@ -129,7 +130,7 @@ def train():
     population = brains
     while generation < 3:
         pairs = list(combinations(population, 2))  # a list of tuples i.e [(a,b),(b,c),(a,c)]
-        print("Training...")
+        print("Training......")
         # update fitness value for each weights
         for i in pairs:
             i = list(i)
@@ -144,8 +145,10 @@ def train():
             fitness_track.append(i[0].fitness)
             fitness_track.append(i[1].fitness)
             brain_track.append(i[0])
-            fitness_track.append(i[1].fitness)
+            brain_track.append(i[1])
             plot_fitness(fitness_track)
+            best = optimal_weights(brain_track, fitness_track)
+            print("The best weights so far:", best.w_1, best.w_2, best.w_3, best.w_4, best.w_5, best.w_6)
 
         # Evolution start
         e = selection(population,"e") # worst brain
@@ -157,11 +160,11 @@ def train():
         population.append(temp1)
         population.append(temp2)
 
-        best = optimal_weights(brain_track,fitness_track)
+        # best = optimal_weights(brain_track,fitness_track)
 
         # one generation ended
         generation += 1
-        print("End of generation "+str(generation))
-        print("The best weights so far:",best.w_1,best.w_2,best.w_3,best.w_4,best.w_5,best.w_6)
+        print("End of generation "+str(generation)+" **********************************************")
+        # print("The best weights so far:",best.w_1,best.w_2,best.w_3,best.w_4,best.w_5,best.w_6)
 
 train()
