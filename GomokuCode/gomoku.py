@@ -82,7 +82,7 @@ def alternate_moves(board, player, x_labels, gfg, board_weights, history):
         history.append(move)
 
         # print(move)
-    
+
 
     return board, board_weights, next_player
 
@@ -167,7 +167,7 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
     if prev_move == None:
         # calcualte all weights
         return board_weights
-        
+
     else:
         board_subset = get_board_subset(board, prev_move[0], prev_move[1], (5,5))
 
