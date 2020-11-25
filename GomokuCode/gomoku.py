@@ -238,6 +238,7 @@ def check_chain_length(n, board, x, y, player):
 # OUTPUT: returns a 5by5 subset of the board
 def get_board_subset(board, x, y, new_shape):
     cropped_board = board[x - new_shape[0] - 1 : x + new_shape[0], y - new_shape[1] - 1 : y + new_shape[1]]
+    print("cropped_board \n", cropped_board)
     return cropped_board
 
 
