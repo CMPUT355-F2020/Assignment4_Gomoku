@@ -1,6 +1,8 @@
 import matplotlib.pyplot as plt
 from Weights import Weights
+from weight_comparison import compare_weights 
 import numpy as np
+import random 
 
 def plot_fitness(fitness):
     plt.plot(fitness)
@@ -73,12 +75,28 @@ def train():
     pass #TO BE FINISHED
 
 
-# parameters are 2 classes 
-def find_winner(weight1, weight2):
+# arguments are 2 weight classes 
+def find_winner(weights_x, weights_o):
     
-    # play game using weights
-    # weight1 = x
-    # weight2 = o
+    player_1 = 'x'
+    player_2 = 'o'
+    
+    board, winner = compare_weights(weights_x, weights_o)
+    
+    if winner == player_1:
+        weight_winner = weights_x
+    elif winner == player_2: 
+        weight_winner = weights_o
+    else: # tie game 
+        weight_winner = random.choice([weights_x, weights_o])
+    
+    num_moves_x, num_moves_o = 0, 0
+    for i in range(0, board.shape[0]):
+        for j in range(0, board.shape[1]): 
+            if board[i][j] == player_1:
+                num_moves_x += 1
+            elif board[i][j] == player_2:
+                num_moves_o += 1
     
     return weight_winner, num_moves_x, num_moves_o 
 
