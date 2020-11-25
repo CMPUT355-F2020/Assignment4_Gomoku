@@ -1,3 +1,5 @@
+# An Evolutionary Approach to optimize the weights (ง'̀-'́)ง
+
 import matplotlib.pyplot as plt
 from Weights import Weights
 from weight_comparison import compare_weights
@@ -126,7 +128,7 @@ def train():
     fitness_track = [] # track all the fitness value so far
     brain_track = [] # track all the brains in history
 
-    brains = brain_init(parent_brains)  # a list of brains
+    brains = brain_init(parent_brains)  # a list of random brains
     population = brains
     while generation < 3:
         pairs = list(combinations(population, 2))  # a list of tuples i.e [(a,b),(b,c),(a,c)]
@@ -134,7 +136,7 @@ def train():
         # update fitness value for each weights
         for i in pairs:
             i = list(i)
-            # games: number of games between parents--games = win_brain1 + win_brain2
+
             # win1: total number of moves in the games won by brain1
             # win2: total number of moves in the games won by brain2
             # cost: total number of moves in all the games
@@ -152,7 +154,7 @@ def train():
 
         # Evolution start
         e = selection(population,"e") # worst brain
-        p1,p2 = selection(population,"p")
+        p1,p2 = selection(population,"p") # best two brains
         temp1,temp2 = crossover(p1,p2,crossover_rate)
         temp1 = mutation(temp1,mutation_stable_rate)
         temp2 = mutation(temp2,mutation_stable_rate)
@@ -160,11 +162,8 @@ def train():
         population.append(temp1)
         population.append(temp2)
 
-        # best = optimal_weights(brain_track,fitness_track)
-
         # one generation ended
         generation += 1
-        print("End of generation "+str(generation)+" **********************************************")
-        # print("The best weights so far:",best.w_1,best.w_2,best.w_3,best.w_4,best.w_5,best.w_6)
+        print("End of generation "+str(generation)+"----------------------------------------------------------")
 
 train()
