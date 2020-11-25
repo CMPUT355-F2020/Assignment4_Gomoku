@@ -71,6 +71,7 @@ def alternate_moves(board, player, x_labels, gfg, board_weights, history):
     if player == 1:
         row, col = get_user_next_move(board, x_labels, len(board[0]))
         board[row][col] = 'x'
+        move = [row,col]
         next_player = 2
 
     # computer is player 2 (o)
@@ -79,8 +80,8 @@ def alternate_moves(board, player, x_labels, gfg, board_weights, history):
         board[move[0]][move[1]] = 'o'
         next_player = 1
 
-        print(move)
-        # history.append(move)
+        # print(move)
+    history.append(move)
 
     return board, board_weights, next_player
 
@@ -164,10 +165,11 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
 
     if prev_move == None:
         # calcualte all weights
-        board_subset = board_weights
+        return board_weights
+        
     else:
         board_subset = get_board_subset(board, prev_move[0], prev_move[1], (5,5))
-
+        print("board_subset: \n",board_subset)
 
     w = Weights()
     W = np.array([w.w_1,w.w_2,w.w_3,w.w_4,w.w_5,w.w_6])
@@ -206,9 +208,9 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
             else:
                 board_subset[row, col] = 0
 
-    #print(board_subset)
-    #print(board_weights)
-    #print(history)
+    print(board_subset)
+    print(board_weights)
+    print("history: ", history)
 
     return board_weights
 
@@ -220,6 +222,7 @@ def assign_weights(board, board_weights, history):   # TODO- clean this fxn
 # OUTPUT:   returns number of 1 and 2 open ended chains of length n
 def check_chain_length(n, board, x, y, player):
     board_subset = get_board_subset(board, x, y, (5,5))
+    print("board_subset in check_len: \n", board_subset)
     match = ""
     for _ in range(n):
         match += player
@@ -262,9 +265,9 @@ def max_move(board_weights):
     random_number = random.randint(0, count-1)
     random_max = max_moves[random_number]
 
-    print(random_max)
-    print(max_moves)
-    print(len(max_moves))
+    # print(random_max)
+    # print(max_moves)
+    # print(len(max_moves))
 
     return random_max # add random? np.random.choice
 
