@@ -151,11 +151,13 @@ def computer_player(board, pattern, player, opponent, weights_x, weights_o):
     if move == None:
 
         board_weights = assign_weights(board, player, opponent, weights_x, weights_o)
-        #print(str(board_weights)) 
-        move = max_move(board_weights)        
+        print(str(board_weights)) 
+        move = max_move(board_weights, board)        
 
     print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
     print("Computer took", str(time.time() - start_time), "to make a move")
+    
+    print("IS LEGAL:"+str(is_legal(board, move)))
 
     return move
 
@@ -177,6 +179,7 @@ def get_chain_location(pattern, board, chains):
             loc = get_empty_cell(board, chain_locations)
             break
     if not found: loc = None
+    if not is_legal(board, loc): loc = None 
     return loc
 
 
@@ -241,8 +244,8 @@ def assign_weights(board, player, opponent, w_x, w_o):   # TODO- clean this fxn
                 
                 board_weights[row][col] = heuristic_o - heuristic_x # fraction of x?
                 
-            else: 
-                board_weights[row, col] = -1 # TODO - set to None
+            elif not is_legal(board, [row, col]): 
+                board_weights[row, col] = -1000000 # TODO - set to None
    
     return board_weights
 
@@ -272,7 +275,7 @@ def get_board_subset(board, x, y, new_shape):
 
 # INPUT:  2D board weight matrix
 # OUTPUT: returns the location of the best offensive move 
-def max_move(board_weights):
+def max_move(board_weights, board):
 
     max = board_weights.max()
     max_moves = []
@@ -285,7 +288,7 @@ def max_move(board_weights):
             item_count += 1
             if item_count > 15:
                 item_count = item_count % 15
-            if item == max:
+            if item == max and is_legal(board, [array_count, item_count ]):
                 count += 1
                 move = (array_count, item_count)
                 max_moves.append(move)
