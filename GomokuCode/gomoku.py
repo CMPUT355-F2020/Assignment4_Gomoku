@@ -9,6 +9,7 @@ from Weights import Weights
 from human_knowledge import *
 
 
+
 player_1 = 'x'
 player_2 = 'o'
 
@@ -224,8 +225,8 @@ def assign_weights(board, player, opponent, w_x, w_o):   # TODO- clean this fxn
                 features_5, features_6 = check_chain_length(1,  temp_board, row, col, player)
                 
                 features = np.array([features_1, features_2,
-                                     features_3, features_4,
-                                     features_5, features_6])
+                                    features_3, features_4,
+                                    features_5, features_6])
                 heuristic_o = np.dot(features, Wo)
                 
                 
