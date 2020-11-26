@@ -1,6 +1,3 @@
-# This program is a replacement of the main() function in gomoku.py meant for weight training 
-# It's purpose is to run the game based on a specific weight class and report the winner and 
-
 from pattern_finder import Pattern
 from Weights import Weights
 from gomoku import * 
@@ -8,8 +5,10 @@ from gomoku import *
 player_1 = 'x'
 player_2 = 'o'
 
-def compare_weights(weights_x, weights_o):
-    
+# main function for gomoku game 
+
+def main():
+
     # initialize variables
     row = 15
     col = 15
@@ -21,15 +20,19 @@ def compare_weights(weights_x, weights_o):
     game_continue = True
     current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
-   
+    display(current_board_state, x_labels, y_labels)
+
     # play game
     weights = Weights()
     while game_continue:
-        current_board_state, current_player = alternate_moves(current_board_state, current_player, x_labels, weights_x, weights_o)
+        print ("Player " + current_player +"'s turn")
+        current_board_state, current_player = alternate_moves(current_board_state, current_player, x_labels, weights, weights)
+        display(current_board_state, x_labels, y_labels)
         
         isWin, winner =   found_winner(pattern, current_board_state)
         
         if isWin:
+            print("Game Over")
             game_continue = False
 
-    return current_board_state, winner 
+main()
