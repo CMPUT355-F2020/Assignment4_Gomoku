@@ -9,8 +9,9 @@ player_2 = 'o'
 
 # main function for gomoku game 
 
-def main():
 
+
+def main():
     # initialize variables
     row = 15
     col = 15
@@ -23,8 +24,6 @@ def main():
     running = True
     current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
-    display(current_board_state, x_labels, y_labels)
-
     # play game
     weights = Weights()
     pygame.init()
@@ -33,18 +32,43 @@ def main():
     icon = pygame.image.load('GomokuCode/assets/gomoku.png')
     pygame.display.set_icon(icon)
     while running:
+        clicked = False
+        got_input = False
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
+                if event.type == pygame.MOUSEBUTTONDOWN:
+                    got_input = get_input_pos(event.pos, current_board_state, 'x')
+                    clicked = True
         if game_continue:
-            print ("Player " + current_player +"'s turn")
-            current_board_state, current_player = alternate_moves(current_board_state, current_player, x_labels, weights, weights)
+            #print ("Player " + current_player +"'s turn")
             update_board(screen, current_board_state)
             pygame.display.update()
-            display(current_board_state,x_labels, y_labels)
+            #display(current_board_state,x_labels, y_labels)
+            if clicked and got_input:
+                font = pygame.font.SysFont('arial', 15) 
+                text = font.render('Waiting for Computer Move', True, (0, 0, 0))
+                textRect = text.get_rect()
+                screen.blit(text, textRect)
+                textRect.center = (300, 300)
+                pygame.event.set_blocked(pygame.MOUSEBUTTONDOWN)
+                pygame.display.update()
+                current_board_state, current_player = alternate_moves(current_board_state, 'o', x_labels, weights, weights)
+                update_board(screen, current_board_state)
+                pygame.display.update()
+                pygame.event.set_allowed(None)
             isWin, winner = found_winner(pattern, current_board_state)
             if isWin:
-                print("Game Over")
+                if winner == 'x':
+                    message = 'You Won'
+                else:
+                    message = 'You Lost'
+                font = pygame.font.SysFont('arial', 20)
+                text = font.render('Game Over: '+ message, True, (0, 0, 0))
+                textRect = text.get_rect()
+                screen.blit(text, textRect)
+                textRect.center = (300, 300)
+                pygame.display.update()
                 game_continue = False
                 
 main()

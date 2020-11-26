@@ -75,21 +75,17 @@ def is_legal(board, cell):
 # INPUT:  2D board matrix, current player, the x labels, and the pattern_finder object
 # OUTPUT: the new state of the board and the next player
 def alternate_moves(board, player, x_labels, weights_x, weights_o):
-    
     pattern = Pattern()
-
-    if player == player_1:  
-        
-        
+    if player == player_1: 
         ## when both players are computers something goes wrong TODO- fix bug 
         ## comment out these 2 lines out if we want the computer to play itself 
         #row, col = get_user_next_move(board, x_labels, len(board[0]))
         #board[row][col] = player_1
         
         ## uncomment these 3 lines if we want the computer to play iteself
-        opponent = player_2
-        move = computer_player(board, pattern, player, opponent, weights_x, weights_o)
-        board[move[0]][move[1]] = player_1        
+        #opponent = player_2
+        #move = computer_player(board, pattern, player, opponent, weights_x, weights_o)
+        #board[move[0]][move[1]] = player_1        
         
         next_player = player_2
 
