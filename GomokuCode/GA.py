@@ -38,24 +38,25 @@ def crossover(brain1,brain2,rate):
     if np.random.randint(0, 1 / rate) == 1: brain1.w_4, brain2.w_4 = brain2.w_4, brain1.w_4
     if np.random.randint(0, 1 / rate) == 1: brain1.w_5, brain2.w_5 = brain2.w_5, brain1.w_5
     if np.random.randint(0, 1 / rate) == 1: brain1.w_6, brain2.w_6 = brain2.w_6, brain1.w_6
+    # ave = (brain1.fitness + brain2.fitness)/2
+    # brain1.fitness = brain2.fitness = ave
     return brain1,brain2
 
 # The mutation function slightly adjusts the weights
 def mutation(brain, stable_rate): # epsilon greedy decision
-    if random.random() < stable_rate: # ~1:stable ~0:unstable
-        brain.w_1 += 0.5
-        brain.w_2 += 1.2
-        brain.w_3 += 0.3
-        brain.w_4 += 0.5
-        brain.w_5 += 0.1
-        brain.w_6 += 0.2
-    else: # add a normally distributed noise to the weights
-        brain.w_1 += np.random.normal(0,1)
-        brain.w_2 += np.random.normal(0,1)
-        brain.w_3 += np.random.normal(0,1)
-        brain.w_4 += np.random.normal(0,1)
-        brain.w_5 += np.random.normal(0,1)
-        brain.w_6 += np.random.normal(0,1)
+    # ~1:stable ~0:unstable
+    if random.random() < stable_rate: brain.w_1 += 0.1
+    else:brain.w_1 += np.random.normal(0,1)# add a normally distributed noise to the weights
+    if random.random() < stable_rate: brain.w_2 += 0.3
+    else:brain.w_2 += np.random.normal(0,1)
+    if random.random() < stable_rate: brain.w_3 += 0.7
+    else:brain.w_3 += np.random.normal(0,1)
+    if random.random() < stable_rate: brain.w_4 += 0.25
+    else:brain.w_4 += np.random.normal(0,1)
+    if random.random() < stable_rate: brain.w_5 += 0.02
+    else:brain.w_5 += np.random.normal(0,1)
+    if random.random() < stable_rate: brain.w_6 += 0.12
+    else:brain.w_6 += np.random.normal(0,1)
     return brain
 
 # Initialize two brains and assign random weights to them
@@ -63,12 +64,12 @@ def brain_init(parent_brains):
     brains = []
     for _ in range(parent_brains):
         w = Weights()
-        w.w_1 = np.random.randint(0, 20)
-        w.w_2 = np.random.randint(0, 20)
-        w.w_3 = np.random.randint(0, 20)
-        w.w_4 = np.random.randint(0, 20)
-        w.w_5 = np.random.randint(0, 20)
-        w.w_6 = np.random.randint(0, 20)
+        w.w_1 = np.random.randint(8, 12)
+        w.w_2 = np.random.randint(15, 20)
+        w.w_3 = np.random.randint(0, 10)
+        w.w_4 = np.random.randint(10, 15)
+        w.w_5 = np.random.randint(0, 5)
+        w.w_6 = np.random.randint(0, 5)
         brains.append(w)
     return brains
 
@@ -123,14 +124,14 @@ def optimal_weights(brain_list,fitness_list):
 def train():
     generation = 0 # number of generations
     parent_brains = 2 # init search space
-    crossover_rate = 0.3
-    mutation_stable_rate = 0.95
+    crossover_rate = 0.5
+    mutation_stable_rate = 0.9
     fitness_track = [] # track all the fitness value so far
     brain_track = [] # track all the brains in history
 
     brains = brain_init(parent_brains)  # a list of random brains
     population = brains
-    while generation < 3:
+    while generation < 50:
         pairs = list(combinations(population, 2))  # a list of tuples i.e [(a,b),(b,c),(a,c)]
         print("Training......")
         # update fitness value for each weights
@@ -153,15 +154,17 @@ def train():
             print("The best weights so far:", best.w_1, best.w_2, best.w_3, best.w_4, best.w_5, best.w_6)
 
         # Evolution start
-        e = selection(population,"e") # worst brain
         p1,p2 = selection(population,"p") # best two brains
-        temp1,temp2 = crossover(p1,p2,crossover_rate)
-        temp1 = mutation(temp1,mutation_stable_rate)
-        temp2 = mutation(temp2,mutation_stable_rate)
-        population.remove(e)
-        population.append(temp1)
-        population.append(temp2)
+        child1,child2 = crossover(p1,p2,crossover_rate)
+        child1 = mutation(child1,mutation_stable_rate)
+        child2 = mutation(child2,mutation_stable_rate)
 
+        population.append(child1)
+        population.append(child2)
+
+        while len(population) > 4:
+            e = selection(population, "e")# worst brain
+            population.remove(e)
         # one generation ended
         generation += 1
         print("End of generation "+str(generation)+"----------------------------------------------------------")
