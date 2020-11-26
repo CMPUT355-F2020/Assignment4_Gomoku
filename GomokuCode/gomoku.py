@@ -254,6 +254,7 @@ def assign_weights(board, player, opponent, w_x, w_o):   # TODO- clean this fxn
 # OUTPUT: the number of chains of length n with 1 and 2 open ends 
 def check_chain_length(n, board, x, y, player):
     board_subset = get_board_subset(board, x, y, (5,5))
+    
     match = ""
     for _ in range(n):
         match += player
