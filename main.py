@@ -52,7 +52,7 @@ def main():
         for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     running = False
-                if event.type == pygame.MOUSEBUTTONDOWN:
+                if event.type == pygame.MOUSEBUTTONDOWN and game_continue:
                     got_input = get_input_pos(event.pos, current_board_state, 'x')
                     clicked = True
                     update_board(screen, current_board_state)
