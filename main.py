@@ -27,7 +27,7 @@ def main():
     # play game
     weights = Weights()
     pygame.init()
-    screen = pygame.display.set_mode((600, 600))
+    screen = pygame.display.set_mode((490, 490))
     pygame.display.set_caption("Gomoku")
     icon = pygame.image.load('assets/gomoku.png')
     pygame.display.set_icon(icon)
