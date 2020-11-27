@@ -67,7 +67,7 @@ def get_user_next_move(board, x_labels, row_size):
 # INPUT:  2D board matrix, cell location
 # OUTPUT: returns True if that cell is empty (i.e. a move can be made)
 def is_legal(board, cell):
-    if (cell != None) and (cell[0] <= len(board)) and (cell[1] <= len(board[0])) and (cell[0] >= 0) and (cell[1] >= 0):
+    if (cell != None) and (cell[0] < len(board)) and (cell[1] < len(board[0])) and (cell[0] >= 0) and (cell[1] >= 0):
         return board[cell[0], cell[1]] == "."
     return False
 
