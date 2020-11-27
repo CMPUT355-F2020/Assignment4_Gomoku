@@ -9,8 +9,6 @@ player_2 = 'o'
 
 # main function for gomoku game 
 
-
-
 def main():
     # initialize variables
     row = 15
@@ -24,6 +22,7 @@ def main():
     running = True
     current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
+    
     # play game
     weights = Weights()
     pygame.init()
@@ -40,11 +39,12 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     got_input = get_input_pos(event.pos, current_board_state, 'x')
                     clicked = True
+                    
         if game_continue:
-            #print ("Player " + current_player +"'s turn")
+      
             update_board(screen, current_board_state)
             pygame.display.update()
-            #display(current_board_state,x_labels, y_labels)
+          
             if clicked and got_input:
                 font = pygame.font.SysFont('arial', 15) 
                 text = font.render('Waiting for Computer Move', True, (0, 0, 0))
@@ -57,7 +57,9 @@ def main():
                 update_board(screen, current_board_state)
                 pygame.display.update()
                 pygame.event.set_allowed(None)
+                
             isWin, winner = found_winner(pattern, current_board_state)
+            
             if isWin:
                 if winner == 'x':
                     message = 'You Won'
