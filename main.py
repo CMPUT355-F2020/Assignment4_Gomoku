@@ -34,13 +34,11 @@ def main():
     x_labels = ['a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'j', 'k', 'l', 'm', 'n', 'o', 'p']
     y_labels = ['1','2','3','4','5','6','7','8','9','10','11','12','13','14', '15']
     pattern = Pattern()
-
     # set up the starting conditions
     game_continue = True
     running = True
     current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
-    
     # play game
     weights = Weights()
     pygame.init()
@@ -71,11 +69,9 @@ def main():
                 textRect.center = (300, 300)
                 pygame.event.set_blocked(pygame.MOUSEBUTTONDOWN)
                 pygame.display.update()
-                current_board_state, current_player = alternate_moves(current_board_state, 'o', x_labels, weights, weights)
+                current_board_state, _ = alternate_moves(current_board_state, 'o', x_labels, weights, weights)
                 update_board(screen, current_board_state)
                 pygame.display.update()
                 pygame.event.set_allowed(None)
-            game_continue = not check_win(pattern, current_board_state, screen)
-
-                
+            game_continue = not check_win(pattern, current_board_state, screen)                
 main()
