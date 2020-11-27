@@ -123,7 +123,7 @@ def computer_player(board, pattern, player, opponent, weights_x, weights_o):
                         move = [i+1,j] # up
                         return move
                     
-                    elif is_legal(board, [i+1, j+1]):
+                    elif is_legal(board, [i-1, j+1]):
                         move = [i-1,j+1] # diag
                         return move
     # third move
