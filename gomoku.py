@@ -231,8 +231,7 @@ def assign_weights(board, player, opponent, w_x, w_o):
                 board_weights[row][col] = heuristic_o - heuristic_x # fraction of x?
 
             elif not is_legal(board, [row, col]):
-                board_weights[row, col] = -1000000 # TODO - set to None
-
+                board_weights[row, col] = -1000000
     return board_weights
 
 
