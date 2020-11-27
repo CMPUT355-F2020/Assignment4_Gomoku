@@ -34,7 +34,6 @@ def get_input_pos(pos, board, player):
                 loc = (30*(row+1), 30*(col+1))
                 d = (loc[0]-pos[0])**2 + (loc[1] - pos[1])**2
                 if d < 10**2:
-                    print(board[row,col])
                     if board[row, col] == '.':
                         board[row,col] = player
                         return True
