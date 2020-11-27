@@ -30,8 +30,8 @@ def create_weight_matrix(row,col):
 
 # INPUT:  2D board matrix and the x and y axis labels
 # OUTPUT: prints board
-def display(board, x_labels, y_labels):
-    print(pandas.DataFrame(board, columns=x_labels, index=y_labels))
+#def display(board, x_labels, y_labels):
+#    print(pandas.DataFrame(board, columns=x_labels, index=y_labels))
 
 
 # INPUT:  2D board matrix and the pattern_finder object

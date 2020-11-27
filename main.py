@@ -6,7 +6,7 @@ from display import *
 
 player_1 = 'x'
 player_2 = 'o'
- 
+
 
 def check_win(pattern, board, screen):
     isWin, winner = found_winner(pattern, board)
