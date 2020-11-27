@@ -119,9 +119,13 @@ def computer_player(board, pattern, player, opponent, weights_x, weights_o):
         for i in range(15):
             for j in range(15):
                 if board[i][j] == opponent:
-                    #move = [i+1,j] #up
-                    move = [i-1,j+1] #diag
-                    return move
+                    if is_legal(board, [i+1, j]):
+                        move = [i+1,j] # up
+                        return move
+                    
+                    elif is_legal(board, [i+1, j+1]):
+                        move = [i-1,j+1] # diag
+                        return move
     # third move
     elif op.defence(board) == 2:
         for i in range(15):
