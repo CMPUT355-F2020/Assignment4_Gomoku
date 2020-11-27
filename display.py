@@ -27,7 +27,7 @@ def update_board(screen, board):
                 
 def get_input_pos(pos, board, player):
     
-    outer = pygame.Rect(31,31,538,538)
+    outer = pygame.Rect(31,31,420,420)
     if outer.collidepoint(pos[0], pos[1]):
         for row in range(0, board.shape[0]):
             for col in range(0, board.shape[1]):
