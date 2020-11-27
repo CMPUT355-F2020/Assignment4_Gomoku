@@ -9,6 +9,22 @@ player_2 = 'o'
 
 # main function for gomoku game 
 
+def check_win(pattern, board, screen):
+    isWin, winner = found_winner(pattern, board)
+    if isWin:
+        if winner == 'x':
+            message = 'You Won'
+        else:
+            message = 'You Lost'
+        font = pygame.font.SysFont('arial', 20)
+        text = font.render('Game Over: '+ message, True, (0, 0, 0))
+        textRect = text.get_rect()
+        screen.blit(text, textRect)
+        textRect.center = (300, 300)
+        pygame.display.update()
+        return True
+    else:
+        return False
 
 
 def main():
@@ -40,11 +56,12 @@ def main():
                 if event.type == pygame.MOUSEBUTTONDOWN:
                     got_input = get_input_pos(event.pos, current_board_state, 'x')
                     clicked = True
+                    update_board(screen, current_board_state)
+                    pygame.display.update()
+                    game_continue = not check_win(pattern, current_board_state, screen)
         if game_continue:
-            #print ("Player " + current_player +"'s turn")
             update_board(screen, current_board_state)
             pygame.display.update()
-            #display(current_board_state,x_labels, y_labels)
             if clicked and got_input:
                 font = pygame.font.SysFont('arial', 15) 
                 text = font.render('Waiting for Computer Move', True, (0, 0, 0))
@@ -57,18 +74,6 @@ def main():
                 update_board(screen, current_board_state)
                 pygame.display.update()
                 pygame.event.set_allowed(None)
-            isWin, winner = found_winner(pattern, current_board_state)
-            if isWin:
-                if winner == 'x':
-                    message = 'You Won'
-                else:
-                    message = 'You Lost'
-                font = pygame.font.SysFont('arial', 20)
-                text = font.render('Game Over: '+ message, True, (0, 0, 0))
-                textRect = text.get_rect()
-                screen.blit(text, textRect)
-                textRect.center = (300, 300)
-                pygame.display.update()
-                game_continue = False
+            game_continue = not check_win(pattern, current_board_state, screen)
                 
 main()
