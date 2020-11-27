@@ -21,6 +21,3 @@ A YouTube video showing our player in action can be found [here](https://youtu.b
 2. Ensure you have all the required python modules installed (they are listed above) 
 3. Run main.py 
 
-## Performance data:
-* Against a random player, the Gomoku player won 100/100 times. 
-* Against our own team members, the Gomoku player won 13/29 times. 
