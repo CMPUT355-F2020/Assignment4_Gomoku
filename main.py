@@ -6,8 +6,7 @@ from display import *
 
 player_1 = 'x'
 player_2 = 'o'
-
-# main function for gomoku game 
+ 
 
 def check_win(pattern, board, screen):
     isWin, winner = found_winner(pattern, board)
@@ -26,6 +25,7 @@ def check_win(pattern, board, screen):
     else:
         return False
 
+# main function for gomoku game
 
 def main():
     # initialize variables
@@ -40,6 +40,7 @@ def main():
     running = True
     current_player = player_1 # TODO - first player chosen randomly 
     current_board_state = create_board(row,col)
+    
     # play game
     weights = Weights()
     pygame.init()
@@ -75,5 +76,6 @@ def main():
                 pygame.display.update()
                 pygame.event.set_allowed(None)
             game_continue = not check_win(pattern, current_board_state, screen)
+
                 
 main()

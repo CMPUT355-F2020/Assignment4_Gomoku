@@ -1,5 +1,5 @@
-# This program is a replacement of the main() function in gomoku.py meant for weight training 
-# It's purpose is to run the game based on a specific weight class and report the winner and 
+# This program is a replacement of main.py used for weight training 
+# It's purpose is to run the game based on a specific weight class and report the winner 
 
 from pattern_finder import Pattern
 from Weights import Weights
@@ -19,7 +19,7 @@ def compare_weights(weights_x, weights_o):
 
     # set up the starting conditions
     game_continue = True
-    current_player = player_1 # TODO - first player chosen randomly 
+    current_player = player_1 
     current_board_state = create_board(row,col)
 
     # play game

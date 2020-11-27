@@ -1,4 +1,4 @@
-class Weights:# To be trained
+class Weights: # Values were trained
     def __init__(self):
         # for playing
         self.w_1 = 23.72 # length 3 with 1 open end 

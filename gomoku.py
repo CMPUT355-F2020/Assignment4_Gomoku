@@ -1,6 +1,6 @@
 # Gomoku Player
 # CMPUT 355 Assignment 4
-# Group Name: ???
+# Group Name: PyMoku
 
 import numpy as np
 import copy, random, time
@@ -77,12 +77,12 @@ def is_legal(board, cell):
 def alternate_moves(board, player, x_labels, weights_x, weights_o):
     pattern = Pattern()
     if player == player_1:
-        ## when both players are computers something goes wrong TODO- fix bug
-        ## comment out these 2 lines out if we want the computer to play itself
+
+        ## un-comment out these 2 lines out if we want to play on the python shell
         #row, col = get_user_next_move(board, x_labels, len(board[0]))
         #board[row][col] = player_1
 
-        ## uncomment these 3 lines if we want the computer to play iteself
+        ## un-comment these 3 lines if we want the computer to play iteself on the python shell 
         #opponent = player_2
         #move = computer_player(board, pattern, player, opponent, weights_x, weights_o)
         #board[move[0]][move[1]] = player_1
@@ -150,9 +150,6 @@ def computer_player(board, pattern, player, opponent, weights_x, weights_o):
         board_weights = assign_weights(board, player, opponent, weights_x, weights_o)
         move = max_move(board_weights, board)
 
-    #print("Computer chose row "+ str(move[0]) + " and column " + str(move[1]))
-    #print("Computer took", str(time.time() - start_time), "to make a move")
-
     return move
 
 
@@ -197,14 +194,9 @@ def get_defensive_move(board, pattern, player):
 
 # INPUT:  2D board matrix (matrix)
 # OUTPUT: board_weights (matrix) with the weights filled in
-def assign_weights(board, player, opponent, w_x, w_o):   # TODO- clean this fxn
-
-    # TODO- check hr around latest move only
+def assign_weights(board, player, opponent, w_x, w_o):  
 
     board_weights = create_weight_matrix(len(board),len(board[0]))
-
-    # commented so that find_winner() in GA.py can send a weight class
-    #w = Weights()
 
     Wx = np.array([w_x.w_1, w_x.w_2, w_x.w_3, w_x.w_4, w_x.w_5, w_x.w_6])
     Wo = np.array([w_o.w_1, w_o.w_2, w_o.w_3, w_o.w_4, w_o.w_5, w_o.w_6])
@@ -239,8 +231,7 @@ def assign_weights(board, player, opponent, w_x, w_o):   # TODO- clean this fxn
                 board_weights[row][col] = heuristic_o - heuristic_x # fraction of x?
 
             elif not is_legal(board, [row, col]):
-                board_weights[row, col] = -1000000 # TODO - set to None
-
+                board_weights[row, col] = -1000000
     return board_weights
 
 
