@@ -19,7 +19,7 @@ def compare_weights(weights_x, weights_o):
 
     # set up the starting conditions
     game_continue = True
-    current_player = player_1 # TODO - first player chosen randomly 
+    current_player = player_1 
     current_board_state = create_board(row,col)
 
     # play game
