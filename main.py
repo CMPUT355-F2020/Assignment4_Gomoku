@@ -29,7 +29,7 @@ def main():
     pygame.init()
     screen = pygame.display.set_mode((600, 600))
     pygame.display.set_caption("Gomoku")
-    icon = pygame.image.load('GomokuCode/assets/gomoku.png')
+    icon = pygame.image.load('assets/gomoku.png')
     pygame.display.set_icon(icon)
     while running:
         clicked = False
