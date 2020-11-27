@@ -1,7 +1,7 @@
 # Assignment 4: Gomoku Solver 
 `Team Members (in alphabetical order): Rehab El-Hajj, Helen Trinh, Sadipath Nath, Heeba Parvez, Linhao Xian`
 
-For CMPUT 355 assignment 4, we will be implementing a solver for the game `Gomoku`. 
+For CMPUT 355 assignment 4, we implemented a player for the game `Gomoku`. 
 
 A YouTube video showing our player in action can be found [here](https://youtu.be/nz6EliS-eoI).
 
@@ -21,4 +21,3 @@ A YouTube video showing our player in action can be found [here](https://youtu.b
 2. Ensure you have all the required python modules installed (they are listed above) 
 3. Run main.py 
 
-## Performance data:
