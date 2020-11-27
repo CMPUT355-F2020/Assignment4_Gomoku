@@ -67,7 +67,7 @@ def get_user_next_move(board, x_labels, row_size):
 # INPUT:  2D board matrix, cell location
 # OUTPUT: returns True if that cell is empty (i.e. a move can be made)
 def is_legal(board, cell):
-    if (cell != None) and (cell[0] <= len(board)) and (cell[1] <= len(board[0])) and (cell[0] >= 0) and (cell[1] >= 0):
+    if (cell != None) and (cell[0] < len(board)) and (cell[1] < len(board[0])) and (cell[0] >= 0) and (cell[1] >= 0):
         return board[cell[0], cell[1]] == "."
     return False
 
@@ -119,9 +119,13 @@ def computer_player(board, pattern, player, opponent, weights_x, weights_o):
         for i in range(15):
             for j in range(15):
                 if board[i][j] == opponent:
-                    #move = [i+1,j] #up
-                    move = [i-1,j+1] #diag
-                    return move
+                    if is_legal(board, [i+1, j]):
+                        move = [i+1,j] # up
+                        return move
+                    
+                    elif is_legal(board, [i-1, j+1]):
+                        move = [i-1,j+1] # diag
+                        return move
     # third move
     elif op.defence(board) == 2:
         for i in range(15):

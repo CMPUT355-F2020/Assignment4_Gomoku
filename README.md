@@ -3,7 +3,7 @@
 
 For CMPUT 355 assignment 4, we will be implementing a solver for the game `Gomoku`. 
 
-A YouTube video showing our player in action can be found [here]().
+A YouTube video showing our player in action can be found [here](https://youtu.be/nz6EliS-eoI).
 
 ## Gomoku Rules: 
 1. The game is played on a 15 by 15 go board by two players (black and white).
